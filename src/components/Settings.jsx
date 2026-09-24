@@ -1,6 +1,7 @@
 import { createSignal, Show } from "solid-js";
 import { Snowflake, MapPin, Trash } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
+import ConfirmModal from "./ConfirmModal";
 
 export default function Settings(props) {
   const s = () => props.settings || {};
@@ -47,20 +48,18 @@ export default function Settings(props) {
           <h2>Reset app data</h2>
           <p>Delete every seed and setting and return Seed Ledger to a fresh install. This can't be undone.</p>
         </div>
-        <Show when={confirming()} fallback={
-          <div><button class="btn btn--danger" onClick={() => setConfirming(true)}><Trash size={16} /> Reset app data</button></div>
-        }>
-          <div class="danger-confirm" role="alert">
-            <p>Permanently delete {props.seedCount === 1 ? "your 1 seed" : `all ${props.seedCount} seeds`} and your settings?</p>
-            <div class="danger-confirm__actions">
-              <button class="btn btn--ghost" onClick={() => setConfirming(false)}>Cancel</button>
-              <button class="btn btn--danger-solid" onClick={() => { setConfirming(false); props.onReset(); }}>
-                Delete everything
-              </button>
-            </div>
-          </div>
-        </Show>
+        <div><button class="btn btn--danger" onClick={() => setConfirming(true)}><Trash size={16} /> Reset app data</button></div>
       </section>
+
+      <Show when={confirming()}>
+        <ConfirmModal
+          title="Reset app data?"
+          message={`This permanently deletes ${props.seedCount === 1 ? "your 1 seed" : `all ${props.seedCount} seeds`}, your frost dates, and your location, and returns Seed Ledger to a fresh install. This can't be undone.`}
+          confirmLabel="Delete everything"
+          onCancel={() => setConfirming(false)}
+          onConfirm={() => { setConfirming(false); props.onReset(); }}
+        />
+      </Show>
     </div>
   );
 }
