@@ -30,4 +30,5 @@ export const api = {
       body: JSON.stringify(data),
     }).then(json),
   remove: (id) => fetch(`${base}/${id}`, { method: "DELETE" }).then(json),
+  reset: () => fetch("/api/reset", { method: "POST" }).then(json),
 };

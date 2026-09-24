@@ -67,11 +67,12 @@ for (const [col, type] of Object.entries(ADDED_COLUMNS)) {
   if (!seedCols.includes(col)) db.exec(`ALTER TABLE seeds ADD COLUMN ${col} ${type}`);
 }
 
-// Default average frost dates (MM-DD) for a fresh install. Only written when
-// missing — change them in Settings to match your area.
-const setSetting = db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)");
-setSetting.run("last_frost", "04-15");  // average last spring frost
-setSetting.run("first_frost", "11-15"); // average first fall frost
-
+// Frost dates start empty; first-run setup (or Settings) fills them in.
+// Installs from before setup existed already have dates, so mark them onboarded.
+const setting = (key) => db.prepare("SELECT value FROM settings WHERE key = ?").get(key)?.value;
+if (!setting("onboarded") && setting("last_frost") && setting("first_frost")) {
+  db.prepare("INSERT INTO settings (key, value) VALUES ('onboarded', '1')").run();
+}
+db.prepare("DELETE FROM settings WHERE key = 'seeded'").run(); // retired flag
 
 export default db;

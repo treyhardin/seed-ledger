@@ -22,7 +22,9 @@ export const ANCHORS = { last_frost: "last frost", first_frost: "first frost" };
 export const ANCHORS_SHORT = { last_frost: "last", first_frost: "first" };
 export const DIRECTIONS = { before: "before", after: "after" };
 
-export const DEFAULT_SETTINGS = { last_frost: "04-15", first_frost: "11-15" };
+// Frost dates start unset; setup or Settings fills them in.
+export const DEFAULT_SETTINGS = {};
+export const hasFrostDates = (s) => !!(s?.last_frost && s?.first_frost);
 
 // A seed's lifecycle status, derived from its actual planting dates.
 export function status(seed) {

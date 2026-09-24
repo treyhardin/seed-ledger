@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import SeedsTable from "./components/SeedsTable";
 import Settings from "./components/Settings";
 import SeedModal from "./components/SeedModal";
+import SetupModal from "./components/SetupModal";
 import Toasts from "./components/Toasts";
 import { Plus } from "./lib/icons";
 
@@ -15,6 +16,7 @@ export default function App() {
   const [view, setView] = createSignal("home");
   const [modal, setModal] = createSignal(null); // null | { id: number|null, mode: 'view'|'edit' }
   const [toasts, setToasts] = createSignal([]);
+  const [lookupOpen, setLookupOpen] = createSignal(false); // setup modal opened from Settings/Home
   let toastSeq = 0;
 
   const list = () => seeds() || [];
@@ -56,6 +58,22 @@ export default function App() {
     refetchSettings();
   }
 
+  // First run: settings loaded but setup never completed or skipped.
+  const firstRun = () => !settings.loading && settings() && !settings().onboarded;
+  async function saveSetup(patch) {
+    await saveSettings(patch);
+    setLookupOpen(false);
+  }
+
+  // Wipe all seeds + settings; the app returns to its first-run state.
+  async function resetAll() {
+    await api.reset();
+    setModal(null);
+    setToasts([]);
+    setView("home");
+    await Promise.all([refetch(), refetchSettings()]);
+  }
+
   function dismissToast(id) { setToasts((t) => t.filter((x) => x.id !== id)); }
   function pushToast(message, undo) {
     const id = ++toastSeq;
@@ -85,13 +103,15 @@ export default function App() {
         <main class="content" classList={{ "content--wide": view() === "seeds" }}>
           <Show when={!loading()} fallback={<p class="loading">Reading the ledger…</p>}>
             <Show when={view() === "home"}>
-              <Home seeds={list()} settings={cfg()} onOpen={openSeed} onMarkHarvested={markHarvested} />
+              <Home seeds={list()} settings={cfg()} onOpen={openSeed} onMarkHarvested={markHarvested}
+                onSetup={() => setLookupOpen(true)} />
             </Show>
             <Show when={view() === "seeds"}>
               <SeedsTable seeds={list()} settings={cfg()} onOpen={openSeed} onAdd={openNew} />
             </Show>
             <Show when={view() === "settings"}>
-              <Settings settings={cfg()} onSave={saveSettings} />
+              <Settings settings={cfg()} onSave={saveSettings} seedCount={list().length}
+                onLookup={() => setLookupOpen(true)} onReset={resetAll} />
             </Show>
           </Show>
         </main>
@@ -102,6 +122,10 @@ export default function App() {
       </button>
 
       <Toasts toasts={toasts()} onDismiss={dismissToast} />
+
+      <Show when={firstRun() || lookupOpen()}>
+        <SetupModal settings={cfg()} firstRun={firstRun()} onSave={saveSetup} onClose={() => setLookupOpen(false)} />
+      </Show>
 
       <Show when={modal()}>
         <SeedModal

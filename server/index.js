@@ -24,7 +24,7 @@ const WRITABLE = [
   "notes", "planted_date", "harvested_date",
 ];
 
-const SETTING_KEYS = ["last_frost", "first_frost"];
+const SETTING_KEYS = ["last_frost", "first_frost", "zone", "location", "onboarded"];
 
 function pick(body) {
   const out = {};
@@ -82,11 +82,24 @@ app.put("/api/settings", (req, res) => {
   const stmt = db.prepare(
     "INSERT INTO settings (key, value) VALUES (@key, @value) ON CONFLICT(key) DO UPDATE SET value = @value"
   );
+  const del = db.prepare("DELETE FROM settings WHERE key = ?");
   for (const key of SETTING_KEYS) {
-    if (key in req.body) stmt.run({ key, value: req.body[key] });
+    if (!(key in req.body)) continue;
+    const value = req.body[key];
+    value == null || value === "" ? del.run(key) : stmt.run({ key, value: String(value) });
   }
   const rows = db.prepare("SELECT key, value FROM settings").all();
   res.json(Object.fromEntries(rows.map((r) => [r.key, r.value])));
+});
+
+// RESET everything: all seeds and settings, back to a fresh install.
+app.post("/api/reset", (_req, res) => {
+  db.transaction(() => {
+    db.prepare("DELETE FROM seeds").run();
+    db.prepare("DELETE FROM settings").run();
+    db.prepare("DELETE FROM sqlite_sequence WHERE name = 'seeds'").run();
+  })();
+  res.status(204).end();
 });
 
 // Serve the built SPA. Unknown non-API routes fall back to index.html.

@@ -30,7 +30,7 @@ curl -O https://raw.githubusercontent.com/treyhardin/seed-ledger/main/docker-com
 docker compose up -d
 ```
 
-Open **http://localhost:3000**, go to **Settings**, and set your average last and first frost dates.
+Open **http://localhost:3000**. The first time, a setup window asks where your garden is (see [First-run setup](#first-run-setup)).
 
 The container restarts automatically after crashes and reboots (`restart: unless-stopped`).
 On macOS and Windows, turn on "Start Docker Desktop when you sign in" so it comes back
@@ -47,6 +47,28 @@ docker compose up -d
 ```
 
 Your data lives in the `seed-ledger-data` Docker volume, so updates keep it.
+
+## First-run setup
+
+Every sowing and harvest date is timed from your average last spring and first fall frost
+dates, so a fresh install starts by asking for them:
+
+- **Look up by location:** search for your town. Seed Ledger downloads about 30 years of
+  daily low temperatures for that spot, then estimates your typical frost dates and your
+  USDA hardiness zone. This works worldwide, including the Southern Hemisphere. Places that
+  rarely freeze get flagged as frost-free, with manual entry offered instead.
+- **Enter dates manually:** type in the dates from a local extension office or almanac.
+- **Skip for now:** set them later from Home or **Settings**.
+
+The estimates come from gridded weather data (about 10 km resolution), so terrain and cities
+can shift your real dates by a week or more. Adjust them if you know better. You can
+re-run the lookup or edit the dates anytime in **Settings**.
+
+The lookup is the only time Seed Ledger contacts an outside service. It uses the free
+[Open-Meteo](https://open-meteo.com/) API ([geocoding](https://open-meteo.com/en/docs/geocoding-api)
+and [historical weather](https://open-meteo.com/en/docs/historical-weather-api), based on ERA5
+reanalysis data from Copernicus/ECMWF), which is free for non-commercial use under CC BY 4.0.
+Offline installs can simply enter dates manually.
 
 ## Deploy with Portainer
 
@@ -98,6 +120,9 @@ docker stop seed-ledger
 docker cp ./garden-backup.db seed-ledger:/data/garden.db
 docker start seed-ledger
 ```
+
+**Start over:** **Settings → Reset app data** deletes every seed and setting and brings
+back the first-run setup. It can't be undone, so take a backup first if you might want the data.
 
 **Prefer a folder over a named volume?** Replace `seed-ledger-data:/data` with a host
 path like `/opt/seed-ledger:/data`. The app runs as user `1000` inside the container, so

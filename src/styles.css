@@ -185,6 +185,7 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--ink-faint);
 }
 .sidebar__nav { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; }
+.sidebar__nav--foot { flex: none; padding-top: 14px; border-top: 1.5px solid var(--ink); }
 .navitem {
   display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 11px;
   width: 100%; text-align: left;
@@ -240,6 +241,12 @@ button { font-family: inherit; cursor: pointer; }
 .card__actions .date-prompt__field { flex: 1 1 100%; }
 .card__actions .date-prompt__input { flex: 1; min-width: 0; }
 .date-prompt__input { width: auto; padding: 5px 8px; font-family: var(--mono); font-size: 0.8rem; }
+
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn--danger { border-color: var(--berry); color: var(--berry); background: transparent; }
+.btn--danger:hover { background: var(--berry); color: var(--paper-card); }
+.btn--danger-solid { background: var(--berry); border-color: var(--berry); color: var(--paper-card); }
+.btn--danger-solid:hover { background: #8a2c22; border-color: #8a2c22; }
 
 .btn--ghost { border-color: var(--line); background: transparent; color: var(--ink-soft); }
 .btn--ghost:hover { border-color: var(--ink); color: var(--ink); background: transparent; }
@@ -908,11 +915,67 @@ textarea.field__input { resize: vertical; }
 .frost-field__label { display: flex; gap: 10px; color: var(--frost); }
 .frost-field__label h3 { font-family: var(--ui); font-size: 1.02rem; font-weight: 700; color: var(--ink); }
 .frost-field__label p { margin: 3px 0 0; font-size: 0.78rem; color: var(--ink-soft); max-width: 32ch; }
-.frost-field__inputs { display: flex; gap: 10px; flex: none; }
-.frost-field__inputs .field { width: auto; }
-.frost-field__inputs select.field__input { min-width: 100px; }
-.frost-field__inputs input.field__input { width: 76px; }
 .settings-note { margin: 0; font-size: 0.78rem; color: var(--ink-faint); }
+
+/* Month + day frost date picker (Settings + setup) */
+.frost-date { display: flex; gap: 10px; flex: none; }
+.frost-date .field { width: auto; }
+.frost-date select.field__input { min-width: 100px; }
+.frost-date input.field__input { width: 76px; }
+
+.settings-location {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding-top: 20px; border-top: 1px dashed var(--line); color: var(--frost);
+}
+.settings-location__text { flex: 1 1 auto; display: flex; flex-direction: column; color: var(--ink); font-weight: 600; font-size: 0.95rem; }
+.settings-location__zone { font-family: var(--mono); font-size: 0.74rem; font-weight: 400; color: var(--blue); }
+
+.settings-panel--danger { border-color: var(--berry); }
+.settings-panel--danger h2 { color: var(--berry); }
+.danger-confirm { display: flex; flex-direction: column; gap: 12px; padding: 14px; border: 1px dashed var(--berry); }
+.danger-confirm p { margin: 0; font-weight: 600; font-size: 0.92rem; }
+.danger-confirm__actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+/* ---------- First-run setup / location lookup ---------- */
+.setup { display: flex; flex-direction: column; gap: 16px; }
+.setup__intro, .setup__note { margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.5; }
+.setup__note { font-size: 0.8rem; color: var(--ink-faint); }
+.setup__status { margin: 0; font-family: var(--mono); font-size: 0.78rem; color: var(--ink-faint); }
+.setup__error { margin: 0; font-size: 0.84rem; color: var(--berry); }
+.setup__notice { margin: 0; padding: 10px 12px; border: 1px dashed var(--blue); font-size: 0.86rem; color: var(--ink); }
+.setup-search { display: flex; gap: 8px; }
+.setup-search .field__input { flex: 1 1 auto; min-width: 0; }
+.place-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border: 1px solid var(--line); }
+.place-list li + li { border-top: 1px solid var(--line); }
+.place-opt {
+  display: flex; align-items: baseline; gap: 8px; width: 100%;
+  padding: 10px 12px; border: none; background: var(--paper-card);
+  text-align: left; font: inherit; color: var(--ink); cursor: pointer;
+}
+.place-opt svg { color: var(--blue); align-self: center; flex: none; }
+.place-opt:hover { background: var(--paper-sunk); }
+.place-opt__name { font-weight: 600; }
+.place-opt__region { font-size: 0.8rem; color: var(--ink-faint); }
+.setup-result { display: flex; flex-direction: column; gap: 10px; }
+.setup-result__place { display: flex; align-items: center; gap: 6px; margin: 0; font-weight: 600; }
+.setup-result__place svg { color: var(--blue); }
+.setup-result__grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 0;
+  background: var(--line); border: 1px solid var(--line);
+}
+.setup-result__grid div { background: var(--paper-card); padding: 10px 12px; }
+.setup-result__grid dt { font-family: var(--mono); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--blue); }
+.setup-result__grid dd { margin: 3px 0 0; font-family: var(--mono); font-size: 1rem; color: var(--ink); }
+.setup-dates { display: flex; flex-direction: column; gap: 12px; }
+.setup-date { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.setup-date__title { font-weight: 600; font-size: 0.9rem; padding-bottom: 10px; }
+.setup-zone { max-width: 160px; }
+.setup-credit { margin: 0; font-size: 0.72rem; color: var(--ink-faint); }
+.setup-credit a { color: var(--blue); }
+
+/* Home prompt when frost dates aren't set */
+.countdown--setup { grid-column: 1 / -1; }
+.countdown__action { margin-left: auto; flex: none; }
 
 /* ---------- Seed detail (modal view mode) ---------- */
 .detail { display: flex; flex-direction: column; gap: 18px; }
@@ -964,6 +1027,7 @@ textarea.field__input { resize: vertical; }
   .sidebar__brand { padding: 0; margin: 0 auto 0 0; border: none; }
   .sidebar__index-label { display: none; }
   .sidebar__nav { flex-direction: row; flex: 0 0 auto; gap: 4px; }
+  .sidebar__nav--foot { padding-top: 0; border-top: none; }
   .navitem { grid-template-columns: auto auto; gap: 8px; padding: 7px 11px; border-color: var(--line); }
   .navitem__code { display: none; }
   .sidebar__foot { display: none; }

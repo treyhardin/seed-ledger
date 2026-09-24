@@ -1,5 +1,5 @@
 import { createMemo, Show, For } from "solid-js";
-import { status, nextFrost, sowOutlook, formatMonthDay } from "../lib/garden";
+import { status, nextFrost, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
 import { Snowflake, Seedling } from "../lib/icons";
 import Almanac from "./Almanac";
 import SeedCard from "./SeedCard";
@@ -24,6 +24,14 @@ export default function Home(props) {
   return (
     <div class="view view--home">
       <div class="widgets">
+        {/* Without frost dates there's no timing to show — prompt for them */}
+        <Show when={!hasFrostDates(props.settings)}>
+          <div class="countdown countdown--setup">
+            <span class="countdown__ico"><Snowflake size={20} /></span>
+            <p class="countdown__text">Set your frost dates to see sowing and harvest timing.</p>
+            <button class="btn btn--primary countdown__action" onClick={props.onSetup}>Set frost dates</button>
+          </div>
+        </Show>
         <Show when={frost()}>
           <div class="countdown">
             <span class="countdown__ico"><Snowflake size={20} /></span>
