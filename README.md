@@ -20,11 +20,13 @@ logins**, so run it somewhere private (see [Security](#security)).
 ## Quick start (Docker)
 
 You need [Docker](https://docs.docker.com/get-docker/) (Docker Desktop on macOS/Windows,
-Docker Engine on Linux).
+Docker Engine on Linux). A prebuilt image for `amd64` and `arm64` (e.g. Raspberry Pi) is
+published at `ghcr.io/treyhardin/seed-ledger`.
+
+Save [`docker-compose.yml`](docker-compose.yml) into an empty folder, then run it from that folder:
 
 ```bash
-git clone https://github.com/treyhardin/seed-ledger.git
-cd seed-ledger
+curl -O https://raw.githubusercontent.com/treyhardin/seed-ledger/main/docker-compose.yml
 docker compose up -d
 ```
 
@@ -40,31 +42,79 @@ after a reboot.
 **Update to a new version:**
 
 ```bash
-git pull
-docker compose up -d --build
+docker compose pull
+docker compose up -d
 ```
 
-Your data lives in the `seed-ledger-data` Docker volume, so rebuilds and updates keep it.
+Your data lives in the `seed-ledger-data` Docker volume, so updates keep it.
+
+## Deploy with Portainer
+
+1. Go to **Stacks → Add stack** and name it `seed-ledger`.
+2. Under **Build method**, pick **Web editor** and paste in the contents of
+   [`docker-compose.yml`](docker-compose.yml).
+   - Or pick **Repository** instead: set **Repository URL** to
+     `https://github.com/treyhardin/seed-ledger`, **Repository reference** to
+     `refs/heads/main`, and **Compose path** to `docker-compose.yml`.
+3. Optional: under **Environment variables**, add `PORT` to use a port other than 3000.
+4. Click **Deploy the stack**, then open `http://<your-server>:3000`.
+
+**Update:** open the stack, click **Update the stack**, turn on **Re-pull image and
+redeploy**, and confirm. For a Repository stack, use **Pull and redeploy**, or turn on
+**GitOps updates** to redeploy automatically when the repo changes.
+
+## Deploy with Dockhand
+
+1. Go to **Stacks → Create**, set **Stack name** to `seed-ledger`, and paste in the
+   contents of [`docker-compose.yml`](docker-compose.yml).
+   - Or use **Stacks → From Git** instead: set **Repository URL** to
+     `https://github.com/treyhardin/seed-ledger.git`, **Branch** to `main`, and
+     **Compose file path** to `docker-compose.yml`. (The default is `compose.yaml`, so change it.)
+2. Optional: add a `PORT` environment variable to use a port other than 3000.
+3. Deploy, then open `http://<your-server>:3000`.
+
+**Update:** use **Redeploy** on the stack with **Pull images** turned on. Git stacks can
+also sync on a schedule (**Enable scheduled sync**) or on a webhook (**Enable webhook**).
 
 ## Your data
 
-Everything is stored in one SQLite file, `garden.db`.
+Everything is stored in one SQLite file, `garden.db`, inside the container at `/data`.
+Portainer and Dockhand prefix the volume name with the stack name
+(e.g. `seed-ledger_seed-ledger-data`). That's expected, and it survives updates.
 
-**Back up** (Docker):
+**Back up** from the Docker host (the container is always named `seed-ledger`). Stop it
+first so the copy is consistent:
 
 ```bash
-docker compose stop
-docker compose cp seed-ledger:/data/garden.db ./garden-backup.db
-docker compose start
+docker stop seed-ledger
+docker cp seed-ledger:/data/garden.db ./garden-backup.db
+docker start seed-ledger
 ```
 
 **Restore** a backup (or move data from another install):
 
 ```bash
-docker compose stop
-docker compose cp ./garden-backup.db seed-ledger:/data/garden.db
-docker compose start
+docker stop seed-ledger
+docker cp ./garden-backup.db seed-ledger:/data/garden.db
+docker start seed-ledger
 ```
+
+**Prefer a folder over a named volume?** Replace `seed-ledger-data:/data` with a host
+path like `/opt/seed-ledger:/data`. The app runs as user `1000` inside the container, so
+give that user ownership of the folder first: `sudo chown -R 1000:1000 /opt/seed-ledger`.
+
+## Building the image yourself
+
+To run your own changes, build locally with the same tag the compose file uses:
+
+```bash
+docker build -t ghcr.io/treyhardin/seed-ledger:latest .
+docker compose up -d
+```
+
+(`docker compose pull` would replace it with the published image again.) Forks get their
+own image automatically: the GitHub Actions workflow in `.github/workflows/docker.yml`
+publishes to `ghcr.io/<your-user>/seed-ledger` on every push to `main`.
 
 ## Running without Docker
 

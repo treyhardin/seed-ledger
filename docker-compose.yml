@@ -1,12 +1,12 @@
 services:
   seed-ledger:
-    build: .
+    image: ghcr.io/treyhardin/seed-ledger:latest
     container_name: seed-ledger
     restart: unless-stopped   # always on: comes back after crashes and reboots
     ports:
       - "${PORT:-3000}:3000"
     volumes:
-      - seed-ledger-data:/data   # garden.db lives here and survives rebuilds
+      - seed-ledger-data:/data   # garden.db lives here and survives updates
 
 volumes:
   seed-ledger-data:
