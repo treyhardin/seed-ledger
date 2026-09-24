@@ -1,0 +1,8 @@
+node_modules
+dist
+garden.db
+garden.db-*
+*.log
+.DS_Store
+.env
+data

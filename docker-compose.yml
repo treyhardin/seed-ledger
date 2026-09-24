@@ -1,0 +1,12 @@
+services:
+  seed-ledger:
+    build: .
+    container_name: seed-ledger
+    restart: unless-stopped   # always on: comes back after crashes and reboots
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - seed-ledger-data:/data   # garden.db lives here and survives rebuilds
+
+volumes:
+  seed-ledger-data:
