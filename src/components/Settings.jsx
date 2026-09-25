@@ -1,13 +1,16 @@
-import { createSignal, Show, onMount } from "solid-js";
+import { createSignal, Show, For, onMount } from "solid-js";
 import { Snowflake, MapPin, Trash, DownloadSimple, UploadSimple } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
 import ConfirmModal from "./ConfirmModal";
 import ImportButton from "./ImportButton";
 import { revealView } from "../lib/motion";
+import { COLOR_MODES, getColorMode, setColorMode } from "../lib/theme";
 
 export default function Settings(props) {
   const s = () => props.settings || {};
   const [confirming, setConfirming] = createSignal(false);
+  const [mode, setMode] = createSignal(getColorMode());
+  const chooseMode = (m) => { setMode(m); setColorMode(m); };
   let root;
   onMount(() => revealView(root, ".settings-panel"));
 
@@ -45,6 +48,24 @@ export default function Settings(props) {
 
         {FrostField({ key: "last_frost", title: "Average last spring frost", help: "The last freeze before the growing season — the \"after last frost\" anchor." })}
         {FrostField({ key: "first_frost", title: "Average first fall frost", help: "The first freeze that ends the season — the \"before first frost\" anchor." })}
+      </section>
+
+      <section class="settings-panel">
+        <div class="settings-panel__head">
+          <h2>Color mode</h2>
+          <p>Auto follows your device's light or dark setting. Saved on this device.</p>
+        </div>
+        <div class="toggle-group" role="radiogroup" aria-label="Color mode">
+          <For each={Object.entries(COLOR_MODES)}>
+            {([value, label]) => (
+              <button type="button" class="toggle-opt" role="radio"
+                classList={{ "toggle-opt--on": mode() === value }}
+                aria-checked={mode() === value} onClick={() => chooseMode(value)}>
+                {label}
+              </button>
+            )}
+          </For>
+        </div>
       </section>
 
       <section class="settings-panel">

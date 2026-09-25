@@ -8,6 +8,13 @@
     <meta name="description" content="Log seed packets, track plantings, and see the growing year at a glance." />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0f100f" media="(prefers-color-scheme: dark)" />
+    <script>
+      // Apply the saved color mode before first paint (see src/lib/theme.js).
+      try {
+        var mode = localStorage.getItem("seed-ledger:color-mode");
+        if (mode === "light" || mode === "dark") document.documentElement.dataset.theme = mode;
+      } catch (e) {}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&display=swap" rel="stylesheet" />

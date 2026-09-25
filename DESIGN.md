@@ -187,8 +187,14 @@ Achromatic by default; a single green carries the present tense. Tokens live on 
 ### Semantic
 - **Danger** (`danger`): destructive actions only (delete, reset, the danger panel heading, setup errors).
 
-### Dark mode
-`@media (prefers-color-scheme: dark)` remaps the same tokens: bg `#0f100f`, surface `#1a1b1a` / `#242624`, ink `#f2f2ef` / `#b4b6b2` / `#8f928e`, line `#242624` / `#3a3c39`, on-ink `#0f100f`, accent `#3ccf73`, accent-ink `#5ddb8a`, accent-soft `#14281b`, danger `#f0715d`. Shadows and scrim deepen. Components never branch on theme; they only read tokens.
+### Color mode (light / dark)
+Every color token is written once as `light-dark(light, dark)`, and `:root` sets `color-scheme: light dark`. **Settings → Color mode** offers Auto / Light / Dark (`src/lib/theme.js`):
+- **Auto** follows the system.
+- **Light and Dark** set `data-theme` on `<html>`, which pins `color-scheme`. Native controls follow it too.
+- **Storage:** the choice is saved per device in localStorage, and applied by an inline script in `index.html` before first paint, so there's no flash.
+- **Switching** cross-fades colors for about 320ms (`.theme-switching`), except under reduced motion.
+- **Dark values:** bg `#0f100f`, surface `#1a1b1a` / `#242624`, ink `#f2f2ef` / `#b4b6b2` / `#8f928e`, line `#242624` / `#3a3c39`, accent `#3ccf73`, accent-ink `#5ddb8a`, accent-soft `#14281b`, danger `#f0715d`.
+- Components never branch on theme. They only read tokens.
 
 **The Now Rule.** Green means the present: open-today windows, planted seeds, Today, "Sow now". A future sow window is mid-grey (`ink-2`), so the green band is always the strongest mark on a row. If it isn't happening now, it isn't green.
 
