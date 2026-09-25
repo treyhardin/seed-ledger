@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-24T22:50:11-04:00",
+  "title": "Design System: Seed Ledger",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "Leaf Green",
+        "canonical": "#169b4c",
+        "dark": "#3ccf73",
+        "cssVar": "--color-accent",
+        "tonalRamp": [
+          "#072f17",
+          "#0b4e26",
+          "#0f6c35",
+          "#148c44",
+          "#45af70",
+          "#7fc89d",
+          "#b9e1c9",
+          "#e8f5ed"
+        ]
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "Leaf Green Ink",
+        "canonical": "#0b7a3a",
+        "dark": "#5ddb8a",
+        "cssVar": "--color-accent-ink",
+        "tonalRamp": [
+          "#032511",
+          "#063d1d",
+          "#085529",
+          "#0a6e34",
+          "#3c9561",
+          "#79b693",
+          "#b6d7c4",
+          "#e7f2eb"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Leaf Tint",
+        "canonical": "#e6f4ea",
+        "dark": "#14281b",
+        "cssVar": "--color-accent-soft",
+        "tonalRamp": [
+          "#454946",
+          "#737a75",
+          "#a1aba4",
+          "#cfdcd3",
+          "#ebf6ee",
+          "#f1f9f3",
+          "#f8fcf9",
+          "#fcfefd"
+        ]
+      },
+      "bg": {
+        "role": "neutral",
+        "displayName": "White",
+        "canonical": "#ffffff",
+        "dark": "#0f100f",
+        "cssVar": "--color-bg",
+        "tonalRamp": [
+          "#4d4d4d",
+          "#808080",
+          "#b2b2b2",
+          "#e6e6e6",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Quiet Fill",
+        "canonical": "#f5f5f3",
+        "dark": "#1a1b1a",
+        "cssVar": "--color-surface",
+        "tonalRamp": [
+          "#4a4a49",
+          "#7a7a7a",
+          "#acacaa",
+          "#dcdcdb",
+          "#f7f7f5",
+          "#fafaf8",
+          "#fcfcfb",
+          "#fefefe"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Quiet Fill Hover",
+        "canonical": "#ececea",
+        "dark": "#242624",
+        "cssVar": "--color-surface-2",
+        "tonalRamp": [
+          "#474746",
+          "#767675",
+          "#a5a5a4",
+          "#d4d4d3",
+          "#f0f0ee",
+          "#f5f5f3",
+          "#f9f9f9",
+          "#fdfdfd"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#111211",
+        "dark": "#f2f2ef",
+        "cssVar": "--color-ink",
+        "tonalRamp": [
+          "#050505",
+          "#080908",
+          "#0c0d0c",
+          "#0f100f",
+          "#414141",
+          "#7c7d7c",
+          "#b8b8b8",
+          "#e7e7e7"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "#545754",
+        "dark": "#b4b6b2",
+        "cssVar": "--color-ink-2",
+        "tonalRamp": [
+          "#191a19",
+          "#2a2c2a",
+          "#3b3d3b",
+          "#4c4e4c",
+          "#767976",
+          "#a1a3a1",
+          "#cccdcc",
+          "#eeeeee"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "#6f726f",
+        "dark": "#8f928e",
+        "cssVar": "--color-ink-3",
+        "tonalRamp": [
+          "#212221",
+          "#383938",
+          "#4e504e",
+          "#646764",
+          "#8c8e8c",
+          "#b0b1b0",
+          "#d4d5d4",
+          "#f1f1f1"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e7e7e4",
+        "dark": "#242624",
+        "cssVar": "--color-line",
+        "tonalRamp": [
+          "#454544",
+          "#747472",
+          "#a2a2a0",
+          "#d0d0cd",
+          "#ecece9",
+          "#f2f2f0",
+          "#f8f8f7",
+          "#fdfdfc"
+        ]
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Hairline Strong",
+        "canonical": "#cfd0cc",
+        "dark": "#3a3c39",
+        "cssVar": "--color-line-strong",
+        "tonalRamp": [
+          "#3e3e3d",
+          "#686866",
+          "#91928f",
+          "#babbb8",
+          "#d9d9d6",
+          "#e5e5e3",
+          "#f1f1f0",
+          "#fafafa"
+        ]
+      },
+      "on-ink": {
+        "role": "neutral",
+        "displayName": "On Ink",
+        "canonical": "#ffffff",
+        "dark": "#0f100f",
+        "cssVar": "--color-on-ink",
+        "tonalRamp": [
+          "#4d4d4d",
+          "#808080",
+          "#b2b2b2",
+          "#e6e6e6",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "danger": {
+        "role": "semantic",
+        "displayName": "Danger",
+        "canonical": "#c4321f",
+        "dark": "#f0715d",
+        "cssVar": "--color-danger",
+        "tonalRamp": [
+          "#3b0f09",
+          "#621910",
+          "#892316",
+          "#b02d1c",
+          "#d05b4c",
+          "#df8e84",
+          "#edc2bc",
+          "#f9eae9"
+        ]
+      },
+      "on-danger": {
+        "role": "semantic",
+        "displayName": "On Danger",
+        "canonical": "#ffffff",
+        "dark": "#0f100f",
+        "cssVar": "--color-on-danger",
+        "tonalRamp": [
+          "#4d4d4d",
+          "#808080",
+          "#b2b2b2",
+          "#e6e6e6",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "now": {
+        "displayName": "Now",
+        "purpose": "Sow now / Next / Frost lines; 400 sentence, 700 subject.",
+        "cssVar": "--font-size-now"
+      },
+      "stat": {
+        "displayName": "Stat",
+        "purpose": "Growing-progress day count.",
+        "cssVar": "--font-size-stat"
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Modal headings.",
+        "cssVar": "--font-size-title"
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings and carousel card names.",
+        "cssVar": "--font-size-xl"
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose; notes cap near 62ch."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Buttons, inputs, counts.",
+        "cssVar": "--font-size-md"
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Now keys, field labels, Almanac row names.",
+        "cssVar": "--font-size-sm"
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Legend, month/year labels, pills, tooltips.",
+        "cssVar": "--font-size-xs"
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-modal",
+        "value": "0 2px 6px rgba(17, 18, 17, 0.06), 0 32px 80px -20px rgba(17, 18, 17, 0.35)",
+        "purpose": "The modal / bottom sheet: the one elevated surface."
+      },
+      {
+        "name": "shadow-float",
+        "value": "0 1px 2px rgba(17, 18, 17, 0.06), 0 12px 32px -8px rgba(17, 18, 17, 0.18)",
+        "purpose": "FAB and toasts floating over content."
+      },
+      {
+        "name": "shadow-raised",
+        "value": "0 1px 2px rgba(17, 18, 17, 0.12)",
+        "purpose": "Selected option in a toggle group only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All transitions and animations."
+      },
+      {
+        "name": "dur-fast",
+        "value": "140ms",
+        "purpose": "Color/background micro-interactions, press scale."
+      },
+      {
+        "name": "dur-base",
+        "value": "240ms",
+        "purpose": "Lifts, reveals, toasts, view-transition cross-fades."
+      },
+      {
+        "name": "dur-slow",
+        "value": "700ms",
+        "purpose": "Almanac mark draw-in (28ms stagger per row) and progress bar."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "720px",
+        "note": "label-col 96px, single-column forms, modal becomes bottom sheet"
+      },
+      {
+        "name": "compact",
+        "value": "420px",
+        "note": "icon-only FAB, smaller month labels"
+      }
+    ],
+    "layout": {
+      "label-col": "168px (96px at <=720px)",
+      "maxw": "1200px",
+      "gutter": "clamp(16px, 4vw, 48px)"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ink fill for the main action in a view or dialog.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Save seed</button>",
+      "css": ".ds-btn { font-family: var(--font-sans); display:inline-flex; align-items:center; gap:var(--space-2); min-height:40px; padding:0 var(--space-4); border:1px solid var(--color-line-strong); border-radius:var(--radius-sm); background:var(--color-bg); color:var(--color-ink); font-size:var(--font-size-md); font-weight:500; cursor:pointer; transition: background var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out); } .ds-btn:active { transform:scale(0.97); } .ds-btn:focus-visible { outline:2px solid var(--color-ink); outline-offset:2px; } .ds-btn-primary { background:var(--color-ink); border-color:var(--color-ink); color:var(--color-on-ink); } .ds-btn-primary:hover { background:var(--color-ink-2); border-color:var(--color-ink-2); }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Hairline-bordered default button.",
+      "html": "<button class=\"ds-btn2\">Edit</button>",
+      "css": ".ds-btn2 { font-family: var(--font-sans); min-height:40px; padding:0 var(--space-4); border:1px solid var(--color-line-strong); border-radius:var(--radius-sm); background:var(--color-bg); color:var(--color-ink); font-size:var(--font-size-md); font-weight:500; cursor:pointer; transition:background var(--dur-fast) ease; } .ds-btn2:hover { background:var(--color-surface); } .ds-btn2:focus-visible { outline:2px solid var(--color-ink); outline-offset:2px; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Destructive actions only; fills red on hover.",
+      "html": "<button class=\"ds-btn-danger\">Delete</button>",
+      "css": ".ds-btn-danger { font-family: var(--font-sans); min-height:40px; padding:0 var(--space-4); border:1px solid var(--color-line-strong); border-radius:var(--radius-sm); background:var(--color-bg); color:var(--color-danger); font-size:var(--font-size-md); font-weight:500; cursor:pointer; transition:background var(--dur-fast) ease, color var(--dur-fast) ease; } .ds-btn-danger:hover { background:var(--color-danger); border-color:var(--color-danger); color:var(--color-on-danger); } .ds-btn-danger:focus-visible { outline:2px solid var(--color-ink); outline-offset:2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form input; ink border and leaf-tint halo on focus.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Variety</span><input class=\"ds-input\" placeholder=\"Cherokee Purple\"></label>",
+      "css": ".ds-field { font-family: var(--font-sans); display:flex; flex-direction:column; gap:6px; } .ds-field-label { font-size:var(--font-size-sm); font-weight:500; color:var(--color-ink-2); } .ds-input { font-family: var(--font-sans); min-height:40px; padding:8px 12px; border:1px solid var(--color-line-strong); border-radius:var(--radius-sm); background:var(--color-bg); color:var(--color-ink); font-size:var(--font-size-md); transition:border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease; } .ds-input:hover { border-color:var(--color-ink-3); } .ds-input:focus { outline:none; border-color:var(--color-ink); box-shadow:0 0 0 3px var(--color-line); }"
+    },
+    {
+      "name": "Status Pill",
+      "kind": "chip",
+      "refersTo": "pill-growing",
+      "description": "Growing (green) and library (hollow dot) status pills.",
+      "html": "<span class=\"ds-pill ds-pill-growing\">Growing</span> <span class=\"ds-pill ds-pill-library\">In library</span>",
+      "css": ".ds-pill { font-family: var(--font-sans); display:inline-flex; align-items:center; gap:6px; height:26px; padding:0 10px; border-radius:var(--radius-pill); font-size:var(--font-size-xs); font-weight:500; background:var(--color-surface); color:var(--color-ink-2); } .ds-pill::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; } .ds-pill-growing { background:var(--color-accent-soft); color:var(--color-accent-ink); } .ds-pill-library::before { background:transparent; box-shadow:inset 0 0 0 1.5px currentColor; }"
+    },
+    {
+      "name": "Carousel Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "In-the-ground seed: fill, no border, no shadow.",
+      "html": "<article class=\"ds-card\"><button class=\"ds-card-name\">Tomato</button><p class=\"ds-card-variety\">Cherokee Purple</p><div class=\"ds-prog\"><b>34</b><span>of 80 days</span></div><div class=\"ds-bar\"><i style=\"width:42%\"></i></div></article>",
+      "css": ".ds-card { font-family: var(--font-sans); display:flex; flex-direction:column; gap:var(--space-2); width:300px; padding:var(--space-5); border-radius:var(--radius-lg); background:var(--color-surface); color:var(--color-ink); } .ds-card-name { font-family: var(--font-sans); padding:0; border:none; background:none; color:var(--color-ink); text-align:left; font-size:var(--font-size-xl); font-weight:600; letter-spacing:var(--tracking-tight); cursor:pointer; } .ds-card-name:hover { text-decoration:underline; text-underline-offset:3px; } .ds-card-variety { margin:0; font-size:var(--font-size-md); color:var(--color-ink-2); } .ds-prog { display:flex; align-items:baseline; gap:var(--space-2); margin-top:var(--space-3); } .ds-prog b { font-size:var(--font-size-stat); font-weight:600; letter-spacing:var(--tracking-display); line-height:1; font-variant-numeric:tabular-nums; } .ds-prog span { font-size:var(--font-size-sm); color:var(--color-ink-2); } .ds-bar { height:4px; border-radius:2px; background:var(--color-line-strong); overflow:hidden; } .ds-bar i { display:block; height:100%; background:var(--color-accent); }"
+    },
+    {
+      "name": "Now Line",
+      "kind": "custom",
+      "description": "Typeset Now row: label-column key + large 400 line with 700 subjects.",
+      "html": "<div class=\"ds-now ds-now-live\"><span class=\"ds-now-key\">Sow now</span><p class=\"ds-now-line\"><button class=\"ds-now-seed\">Spinach</button><span class=\"ds-now-meta\"> until Oct 3</span></p></div>",
+      "css": ".ds-now { font-family: var(--font-sans); display:grid; grid-template-columns:var(--label-col) 1fr; align-items:baseline; padding:var(--space-4) 0; border-top:1px solid var(--color-ink); color:var(--color-ink); } .ds-now-key { padding-right:var(--space-4); font-size:var(--font-size-sm); font-weight:500; color:var(--color-ink-2); } .ds-now-live .ds-now-key { color:var(--color-accent-ink); } .ds-now-line { margin:0; font-size:var(--font-size-now); font-weight:400; line-height:1.08; letter-spacing:var(--tracking-display); } .ds-now-seed { padding:0; border:none; background:none; color:inherit; font:inherit; font-weight:700; letter-spacing:inherit; cursor:pointer; text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:0.14em; text-decoration-color:var(--color-accent); } .ds-now-meta { color:var(--color-ink-3); font-variant-numeric:tabular-nums; }"
+    },
+    {
+      "name": "Almanac Row",
+      "kind": "custom",
+      "description": "Signature row: future sow bar (ink-2), open sow bar (green), grow run, round harvest dot, single-week square.",
+      "html": "<div class=\"ds-alm\"><span class=\"ds-alm-name\">Peas</span><div class=\"ds-alm-track\"><span class=\"ds-alm-sow\" style=\"left:4%;width:14%\"></span><span class=\"ds-alm-run\" style=\"left:18%;width:22%\"></span><span class=\"ds-alm-dot\" style=\"left:40%\"></span><span class=\"ds-alm-sow ds-alm-open ds-alm-point\" style=\"left:62%\"></span><span class=\"ds-alm-run\" style=\"left:62%;width:20%\"></span><span class=\"ds-alm-dot\" style=\"left:82%\"></span></div></div>",
+      "css": ".ds-alm { font-family: var(--font-sans); display:grid; grid-template-columns:var(--label-col) 1fr; align-items:center; border-bottom:1px solid var(--color-line); width:640px; } .ds-alm:hover { background:var(--color-surface); } .ds-alm-name { font-size:var(--font-size-sm); font-weight:500; color:var(--color-ink); } .ds-alm-track { position:relative; height:32px; } .ds-alm-sow { position:absolute; top:50%; height:10px; margin-top:-5px; min-width:10px; border-radius:5px; background:var(--color-ink-2); z-index:1; } .ds-alm-open { background:var(--color-accent); } .ds-alm-point { width:10px; margin-left:-5px; border-radius:2px; } .ds-alm-run { position:absolute; top:50%; height:2px; margin-top:-1px; background:var(--color-ink-3); } .ds-alm-dot { position:absolute; top:50%; width:10px; height:10px; margin:-5px 0 0 -5px; border-radius:50%; background:var(--color-ink); box-shadow:0 0 0 2px var(--color-bg); z-index:1; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Swiss Almanac",
+    "overview": "The garden year set as Swiss typography. Hierarchy comes from size, weight and a strict label column, not from boxes or color. The page is a white sheet of near-black type with hairline rules; the only color on it means \"now\". It is built light-first for a phone read outdoors in sun, and follows the system into dark.\n\nHome opens as a few lines of large type (Sow now / Next / Frost) keyed in a narrow label column, then The Almanac on the same column, then the seeds in the ground. Nothing competes with the data: no widgets, no card grid, no decorative surface texture. This replaces the retired drafting-sheet look entirely.",
+    "keyCharacteristics": [
+      "White ground, near-black ink, three greys, hairlines; one leaf green reserved for \"now\".",
+      "One typeface (Schibsted Grotesk), tabular figures wherever numbers are data.",
+      "A shared label column aligns the Now block and The Almanac.",
+      "Surfaces separate by fill, never by border; the modal is the only elevated surface.",
+      "One authored motion: Almanac marks draw in left to right, row by row."
+    ],
+    "rules": [
+      {
+        "name": "The Now Rule",
+        "body": "Green means the present: open-today windows, planted seeds, Today, \"Sow now\". A future sow window is mid-grey (`ink-2`), so the green band is always the strongest mark on a row. If it isn't happening now, it isn't green.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Accent Rule",
+        "body": "There is exactly one hue in the system. Danger red appears only on destructive controls; there is no category, status or decorative color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Focus Rule",
+        "body": "The focus ring is a 2px ink outline offset 2px, never the accent.",
+        "section": "colors"
+      },
+      {
+        "name": "The Weight Contrast Rule",
+        "body": "In the Now block the sentence is 400 and the subject is 700. Emphasis is weight within one size, never color or a second size.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Numbers that are data (dates, counts, months, years) use `font-variant-numeric: tabular-nums`.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "No second typeface, no mono, no serif.",
+        "section": "typography"
+      },
+      {
+        "name": "The Shared Column Rule",
+        "body": "Anything keyed on the home page aligns to `--label-col`. Don't introduce a second label width.",
+        "section": "layout"
+      },
+      {
+        "name": "The One Surface Rule",
+        "body": "The modal is the only elevated surface. Cards, panels and sections never take a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No-Box Rule",
+        "body": "Regions have no borders. A group is a fill (carousel card, second-sow block) or sits between hairline rules. Borders belong to controls (buttons, inputs) only.",
+        "section": "shapes"
+      },
+      {
+        "name": "The No Today Line Rule",
+        "body": "Today is marked by the pill in its own band only. There is no full-height today line through the rows (explicitly removed at Trey's request).",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** build every value from a `--{category}-{name}` token on `:root`; rules reference tokens, not raw values.",
+      "**Do** keep green for \"now\" only (open-today windows, planted seeds, Today, \"Sow now\"); future windows are mid-grey `ink-2`.",
+      "**Do** keep sow marks square-ish (bars, 2px-cornered squares) and harvest marks round, so the two never read alike.",
+      "**Do** carry hierarchy with size and weight in Schibsted Grotesk; use 400 body / 700 subject contrast for typeset lines.",
+      "**Do** align keyed content to `--label-col`.",
+      "**Do** group with fill or hairlines, and keep the modal as the only elevated surface.",
+      "**Do** use CSS `.tip` tooltips and the in-app confirm modal instead of native `title` / `confirm()`.",
+      "**Do** make every new motion respect `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**Don't** put eyebrow or kicker labels above headings.",
+      "**Don't** build card dashboards or rows of stat widgets; the Now block is type.",
+      "**Don't** add a second typeface or any accent color beyond the one green (danger red is for destructive actions only).",
+      "**Don't** draw a full-height today line in The Almanac.",
+      "**Don't** put borders around regions or shadows on cards and panels.",
+      "**Don't** reintroduce the drafting look: vellum/cream grounds, grid-paper backgrounds, 0px corners, mono labels, title blocks, surveyor red.",
+      "**Don't** use icons outside Phosphor regular, or hand-drawn glyphs."
+    ]
+  }
+}

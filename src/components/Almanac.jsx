@@ -43,15 +43,25 @@ export default function Almanac(props) {
   const rows = createMemo(() =>
     props.seeds
       .map((s) => {
-        const wins = sowWindows(s, settings()).map((w) => {
+        const growing = status(s) === "growing";
+        const planned = sowWindows(s, settings()).map((w) => {
           const start = shift(w.start);
           const width = (((w.end - w.start) % 1) + 1) % 1; // band width, wrap-safe
           return { start, end: (start + width) % 1, width, hf: shift(harvestFor(s, settings(), w)) };
         });
         // How far ahead of today the next sow window opens (0–1 of a year); 0 if open now.
         const untilSow = (w) => ((today() - w.start + 1) % 1 <= w.width ? 0 : (w.start - today() + 1) % 1);
-        const nextSow = wins.length ? Math.min(...wins.map(untilSow)) : null;
-        return { seed: s, wins, nextSow, growing: status(s) === "growing", harvest: expectedHarvest(s) };
+        const nextSow = planned.length ? Math.min(...planned.map(untilSow)) : null;
+        // Green is reserved for "now": windows open today, and what's actually in the ground.
+        for (const w of planned) w.open = untilSow(w) === 0;
+        let wins = planned;
+        if (growing) {
+          // Plot the real planting (sown date → expected harvest), not the plan.
+          const sown = shift(yearFraction(new Date(`${s.planted_date}T00:00:00`)));
+          const h = expectedHarvest(s);
+          wins = [{ start: sown, end: sown, width: 0, hf: h ? shift(yearFraction(h)) : null, open: true }];
+        }
+        return { seed: s, wins, nextSow, growing, harvest: expectedHarvest(s) };
       })
       // Every seed gets a row (the almanac doubles as the seed list): planted
       // seeds first by soonest expected harvest, then by soonest sow, then
@@ -72,6 +82,7 @@ export default function Almanac(props) {
         <h2>The Almanac</h2>
         <ul class="legend" aria-hidden="true">
           <li><span class="key key--sow"></span>Sow</li>
+          <li><span class="key key--sow key--open"></span>Sow now / planted</li>
           <li><span class="key key--grow"></span>Grow</li>
           <li><span class="key key--harvest"></span>Harvest</li>
           <li><span class="key key--datum"></span>Frost</li>
@@ -124,11 +135,11 @@ export default function Almanac(props) {
           </div>
 
           <For each={rows()} fallback={<p class="almanac__empty">No seeds yet.</p>}>
-            {(r) => {
+            {(r, i) => {
               const isActive = status(r.seed) === "growing";
               return (
-                <div class="almanac__row" classList={{ "almanac__row--active": isActive }}>
-                  <button class="almanac__rowlabel" onClick={() => props.onSelect?.(r.seed)} title={r.seed.name}>
+                <div class="almanac__row" classList={{ "almanac__row--active": isActive }} style={{ "--i": i() }}>
+                  <button class="almanac__rowlabel" onClick={() => props.onSelect?.(r.seed)} >
                     {r.seed.name}
                   </button>
                   <div class="almanac__track">
@@ -150,12 +161,12 @@ export default function Almanac(props) {
                             </For>
                             <For each={band}>
                               {([a, b]) => (
-                                <span class="sowband" classList={{ "sowband--point": b - a === 0 }}
-                                  style={{ left: pct(a), width: pct(b - a) }} title="Sow window"></span>
+                                <span class="sowband" classList={{ "sowband--point": b - a === 0, "sowband--open": w.open }}
+                                  style={{ left: pct(a), width: pct(b - a) }}></span>
                               )}
                             </For>
                             <Show when={w.hf != null}>
-                              <span class="station station--harvest" style={{ left: pct(w.hf) }} title="Harvest"></span>
+                              <span class="station station--harvest" style={{ left: pct(w.hf) }}></span>
                             </Show>
                           </>
                         );

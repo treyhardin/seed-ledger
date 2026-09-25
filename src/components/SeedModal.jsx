@@ -1,11 +1,12 @@
 import { createSignal, Show } from "solid-js";
 import SeedFields from "./SeedFields";
 import {
-  status, START_METHOD, rangeLabel, expectedHarvest, formatDate, daysSince,
+  status, START_METHOD, rangeLabel, formatDate,
 } from "../lib/garden";
-import { X, Plant, Shovel, Basket, Trash } from "../lib/icons";
+import { X, Shovel, Basket, Trash } from "../lib/icons";
 import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
+import Progress from "./Progress";
 import HarvestButton from "./HarvestButton";
 
 const STATUS_LABEL = { library: "In library", growing: "Growing" };
@@ -29,15 +30,7 @@ function Detail(props) {
       </div>
 
       <Show when={st() === "growing"}>
-        <div class="progress">
-          <p class="progress__line">
-            <Plant size={16} /> In the ground <b>{daysSince(seed().planted_date)}</b> days
-            <span> · sown {formatDate(seed().planted_date)}</span>
-          </p>
-          <Show when={expectedHarvest(seed())}>
-            <p class="progress__eta">Expected harvest ~ {formatDate(expectedHarvest(seed()))}</p>
-          </Show>
-        </div>
+        <Progress seed={seed()} />
       </Show>
       <Show when={st() === "library" && seed().harvested_date}>
         <p class="card__harvested"><Basket size={15} /> Last harvested {formatDate(seed().harvested_date)}</p>
@@ -97,9 +90,7 @@ export default function SeedModal(props) {
     if (removed) props.onClose();
   }
 
-  const eyebrow = () =>
-    mode() === "edit" ? (isNew() ? "New entry" : "Editing") : "Seed";
-  const title = () => (mode() === "edit" && isNew() ? "Log a seed packet" : seed().name);
+  const title = () => (isNew() ? "Add seed" : mode() === "edit" ? `Edit ${seed().name}` : seed().name);
 
   return (
     <div class="scrim" onPointerDown={onScrimDown} onClick={onScrimClick}>
@@ -107,7 +98,6 @@ export default function SeedModal(props) {
         <Show when={isNew() || seed()}>
         <header class="modal__head">
           <div>
-            <p class="modal__eyebrow">{eyebrow()}</p>
             <h2>{title()}</h2>
             <Show when={mode() === "view" && seed().variety}>
               <p class="modal__variety">{seed().variety}</p>
@@ -116,7 +106,7 @@ export default function SeedModal(props) {
               <p class="modal__sub">{seed().source}</p>
             </Show>
           </div>
-          <button class="btn btn--icon" onClick={props.onClose} title="Close"><X size={18} /></button>
+          <button class="btn btn--icon tip" data-tip="Close" aria-label="Close" onClick={props.onClose}><X size={18} /></button>
         </header>
 
         <Show
@@ -124,7 +114,7 @@ export default function SeedModal(props) {
           fallback={
             <SeedFields
               seed={seed()}
-              submitLabel={isNew() ? "Add to ledger" : "Save changes"}
+              submitLabel={isNew() ? "Add seed" : "Save changes"}
               onSubmit={handleSubmit}
               onCancel={isNew() ? props.onClose : () => setMode("view")}
             />
@@ -134,7 +124,7 @@ export default function SeedModal(props) {
             <Detail seed={seed()} settings={props.settings} />
           </div>
           <footer class="modal__foot modal__foot--split">
-            <button class="btn btn--icon" title="Delete seed" onClick={handleDelete}><Trash size={16} /></button>
+            <button class="btn btn--icon tip" data-tip="Delete seed" aria-label="Delete seed" onClick={handleDelete}><Trash size={16} /></button>
             <div class="modal__foot-right">
               <Show when={st() === "library"}>
                 <button class="btn btn--primary" onClick={() => props.onMarkPlanted(seed())}>

@@ -8,6 +8,14 @@ import SetupModal from "./components/SetupModal";
 import Toasts from "./components/Toasts";
 import { Plus, Plant, Gear } from "./lib/icons";
 
+// Cross-fade a DOM change with the View Transitions API where supported
+// (view switches, closing dialogs). Falls back to an instant update.
+function withTransition(update) {
+  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  if (!document.startViewTransition || reduce) return update();
+  document.startViewTransition(update);
+}
+
 export default function App() {
   const [seeds, { refetch, mutate }] = createResource(api.list);
   const [settings, { mutate: mutateSettings, refetch: refetchSettings }] = createResource(api.getSettings);
@@ -28,7 +36,7 @@ export default function App() {
   function openNew() { setModal({ id: null, mode: "edit" }); }
   function openSeed(seed) { setModal({ id: seed.id, mode: "view" }); }
   function editSeed(seed) { setModal({ id: seed.id, mode: "edit" }); }
-  function closeModal() { setModal(null); }
+  function closeModal() { withTransition(() => setModal(null)); }
 
   async function save(data) {
     const m = modal();
@@ -60,8 +68,9 @@ export default function App() {
   const firstRun = () => !settings.loading && settings() && !settings().onboarded;
   async function saveSetup(patch) {
     await saveSettings(patch);
-    setLookupOpen(false);
+    withTransition(() => setLookupOpen(false));
   }
+  const go = (next) => withTransition(() => setView(next));
 
   // Replace everything with an uploaded backup.
   async function importData(data) {
@@ -109,7 +118,7 @@ export default function App() {
   return (
     <div class="layout">
       <header class="topbar">
-        <button class="brand" onClick={() => setView("home")} aria-label="Seed Ledger home">
+        <button class="brand" onClick={() => go("home")} aria-label="Seed Ledger home">
           <span class="mark"><Plant size={19} /></span>
           <span class="brand__name">Seed Ledger</span>
         </button>
@@ -119,7 +128,7 @@ export default function App() {
           data-tip={view() === "settings" ? "Close settings" : "Settings"}
           aria-label="Settings"
           aria-pressed={view() === "settings"}
-          onClick={() => setView(view() === "settings" ? "home" : "settings")}
+          onClick={() => go(view() === "settings" ? "home" : "settings")}
         >
           <Gear size={20} />
         </button>
@@ -148,7 +157,7 @@ export default function App() {
       <Toasts toasts={toasts()} onDismiss={dismissToast} />
 
       <Show when={firstRun() || lookupOpen()}>
-        <SetupModal settings={cfg()} firstRun={firstRun()} onSave={saveSetup} onClose={() => setLookupOpen(false)}
+        <SetupModal settings={cfg()} firstRun={firstRun()} onSave={saveSetup} onClose={() => withTransition(() => setLookupOpen(false))}
           seedCount={list().length} onImport={importData} onError={(m) => pushToast(m)} />
       </Show>
 

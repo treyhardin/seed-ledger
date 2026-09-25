@@ -89,7 +89,6 @@ export default function SetupModal(props) {
       <div class="modal modal--setup" role="dialog" aria-modal="true" aria-labelledby="setup-title">
         <header class="modal__head">
           <div>
-            <p class="modal__eyebrow">{props.firstRun ? "Welcome" : "Frost dates"}</p>
             <h2 id="setup-title">{props.firstRun ? "Set up your garden" : "Look up by location"}</h2>
           </div>
           <Show when={!props.firstRun}>

@@ -212,7 +212,7 @@ export default function SeedFields(props) {
             <div class="second-sow">
               <div class="second-sow__head">
                 <span class="field__label">Second sow time</span>
-                <button type="button" class="btn btn--icon btn--xs" title="Remove second sow time"
+                <button type="button" class="btn btn--icon btn--xs tip" data-tip="Remove second sow time" aria-label="Remove second sow time"
                   onClick={() => setSecond(false)}><X size={13} /></button>
               </div>
               {RangeRow("plant2_weeks", "plant2_weeks_max", "plant2_direction", "plant2_anchor")}

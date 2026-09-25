@@ -1,8 +1,8 @@
 import { Show } from "solid-js";
-import { status, expectedHarvest, daysSince, formatDate } from "../lib/garden";
-import { CalendarDots, Plant } from "../lib/icons";
+import { status } from "../lib/garden";
 import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
+import Progress from "./Progress";
 import HarvestButton from "./HarvestButton";
 
 export default function SeedCard(props) {
@@ -24,27 +24,13 @@ export default function SeedCard(props) {
         <span class="card__sun"><SunTag sun={seed().sun} size={14} label /></span>
       </header>
 
-      <Show when={seed().days_to_maturity}>
-        <dl class="specs">
-          <div class="spec"><dt><CalendarDots size={15} /> Maturity</dt><dd>{`${seed().days_to_maturity}d`}</dd></div>
-        </dl>
-      </Show>
-
       {/* Frost-relative timing — only useful before it's in the ground */}
       <Show when={state() === "library"}>
         <SowWindows seed={seed()} settings={props.settings} />
       </Show>
 
       <Show when={state() === "growing"}>
-        <div class="progress">
-          <p class="progress__line">
-            <Plant size={16} /> In the ground <b>{daysSince(seed().planted_date)}</b> days
-            <span> · sown {formatDate(seed().planted_date)}</span>
-          </p>
-          <Show when={expectedHarvest(seed())}>
-            <p class="progress__eta">Expected harvest ~ {formatDate(expectedHarvest(seed()))}</p>
-          </Show>
-        </div>
+        <Progress seed={seed()} />
       </Show>
 
       <Show when={seed().notes}>
