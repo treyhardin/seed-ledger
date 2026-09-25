@@ -53,6 +53,9 @@ Your data lives in the `seed-ledger-data` Docker volume, so updates keep it.
 Every sowing and harvest date is timed from your average last spring and first fall frost
 dates, so a fresh install starts by asking for them:
 
+- **Use my current location:** share your location with the browser. This only works when the
+  app is opened over HTTPS or on `localhost`, since browsers block location access on plain-HTTP
+  pages. Behind Tailscale HTTPS or Cloudflare it works; at `http://<server-ip>:3000` the button hides.
 - **Look up by location:** search for your town. Seed Ledger downloads about 30 years of
   daily low temperatures for that spot, then estimates your typical frost dates and your
   USDA hardiness zone. This works worldwide, including the Southern Hemisphere. Places that
@@ -64,10 +67,12 @@ The estimates come from gridded weather data (about 10 km resolution), so terrai
 can shift your real dates by a week or more. Adjust them if you know better. You can
 re-run the lookup or edit the dates anytime in **Settings**.
 
-The lookup is the only time Seed Ledger contacts an outside service. It uses the free
+The lookup is the only time Seed Ledger contacts outside services. It uses the free
 [Open-Meteo](https://open-meteo.com/) API ([geocoding](https://open-meteo.com/en/docs/geocoding-api)
 and [historical weather](https://open-meteo.com/en/docs/historical-weather-api), based on ERA5
-reanalysis data from Copernicus/ECMWF), which is free for non-commercial use under CC BY 4.0.
+reanalysis data from Copernicus/ECMWF), which is free for non-commercial use under CC BY 4.0. When you use your current location,
+the rounded coordinates (to about 1 km) are also sent to
+[BigDataCloud](https://www.bigdatacloud.com/)'s free client-side reverse geocoding to get a town name.
 Offline installs can simply enter dates manually.
 
 ## Deploy with Portainer

@@ -1,7 +1,7 @@
 import { createSignal, Show, For, Switch, Match } from "solid-js";
-import { searchPlaces, estimateClimate, placeLabel } from "../lib/climate";
+import { searchPlaces, estimateClimate, placeLabel, canGeolocate, currentPlace, geolocationError } from "../lib/climate";
 import { formatMonthDay } from "../lib/garden";
-import { X, MapPin } from "../lib/icons";
+import { X, MapPin, Crosshair } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
 import ImportButton from "./ImportButton";
 
@@ -34,6 +34,19 @@ export default function SetupModal(props) {
     } catch {
       setError("Couldn't reach the place search. Check your connection, or enter dates manually.");
     } finally { setBusy(""); }
+  }
+
+  // Preferred path: the browser's own location.
+  async function locate() {
+    setError(""); setBusy("Finding your location…");
+    let place;
+    try {
+      place = await currentPlace();
+    } catch (err) {
+      setBusy("");
+      return setError(geolocationError(err));
+    }
+    pick(place);
   }
 
   async function pick(place) {
@@ -88,13 +101,20 @@ export default function SetupModal(props) {
           <Switch>
             <Match when={step() === "search"}>
               <p class="setup__intro">
-                Every sowing and harvest date is timed from your average frost dates. Search for your
-                town and Seed Ledger will estimate them from 30 years of local weather.
+                Every sowing and harvest date is timed from your average frost dates. Share your
+                location or search for your town, and Seed Ledger will estimate them from 30 years
+                of local weather.
               </p>
+              <Show when={canGeolocate()}>
+                <button class="btn btn--primary setup-locate" onClick={locate} disabled={!!busy()}>
+                  <Crosshair size={16} /> Use my current location
+                </button>
+                <p class="setup-or"><span>or search for your town</span></p>
+              </Show>
               <form class="setup-search" onSubmit={search}>
                 <input class="field__input" type="search" placeholder="Town or city, e.g. Portland"
                   aria-label="Town or city" value={query()} onInput={(e) => setQuery(e.currentTarget.value)} />
-                <button type="submit" class="btn btn--primary" disabled={!!busy()}>Search</button>
+                <button type="submit" class="btn" disabled={!!busy()}>Search</button>
               </form>
               <Show when={busy()}><p class="setup__status">{busy()}</p></Show>
               <Show when={!busy() && places()}>
@@ -150,7 +170,10 @@ export default function SetupModal(props) {
           <Show when={error()}><p class="setup__error" role="alert">{error()}</p></Show>
           <Show when={step() !== "manual"}>
             <p class="setup-credit">
-              Location and weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+              Weather and place search by <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+              <Show when={canGeolocate()}>
+                {" · "}place names by <a href="https://www.bigdatacloud.com/" target="_blank" rel="noopener">BigDataCloud</a>
+              </Show>
             </p>
           </Show>
         </div>

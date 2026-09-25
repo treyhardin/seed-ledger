@@ -946,6 +946,12 @@ a.btn { text-decoration: none; }
 .setup__status { margin: 0; font-family: var(--mono); font-size: 0.78rem; color: var(--ink-faint); }
 .setup__error { margin: 0; font-size: 0.84rem; color: var(--berry); }
 .setup__notice { margin: 0; padding: 10px 12px; border: 1px dashed var(--blue); font-size: 0.86rem; color: var(--ink); }
+.setup-locate { align-self: flex-start; }
+.setup-or {
+  display: flex; align-items: center; gap: 10px; margin: 0;
+  font-family: var(--mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint);
+}
+.setup-or::before, .setup-or::after { content: ""; flex: 1; border-top: 1px dashed var(--line); }
 .setup-search { display: flex; gap: 8px; }
 .setup-search .field__input { flex: 1 1 auto; min-width: 0; }
 .place-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border: 1px solid var(--line); }

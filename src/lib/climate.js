@@ -22,6 +22,43 @@ export async function searchPlaces(query) {
   }));
 }
 
+// Browser location. Only offered in a secure context (HTTPS or localhost) —
+// browsers block geolocation on plain-HTTP pages.
+export const canGeolocate = () =>
+  typeof navigator !== "undefined" && "geolocation" in navigator && window.isSecureContext;
+
+// Resolves to a place ({ name, region, latitude, longitude }). Coordinates are
+// rounded to ~1 km before leaving the browser (the weather grid is ~10 km).
+export async function currentPlace() {
+  const pos = await new Promise((resolve, reject) =>
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: false, timeout: 15000, maximumAge: 600000,
+    })
+  );
+  const round = (n) => Math.round(n * 100) / 100;
+  const latitude = round(pos.coords.latitude);
+  const longitude = round(pos.coords.longitude);
+  const named = await reverseGeocode(latitude, longitude).catch(() => null);
+  return { name: "Your location", region: "", ...named, latitude, longitude };
+}
+
+// Coordinates → town name via BigDataCloud's free client-side endpoint
+// (meant for use with browser geolocation; no key needed).
+async function reverseGeocode(latitude, longitude) {
+  const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
+  if (!res.ok) return null;
+  const d = await res.json();
+  const name = d.locality || d.city;
+  if (!name) return null;
+  return { name, region: [d.principalSubdivision, d.countryName].filter(Boolean).join(", ") };
+}
+
+// Why a location request failed, in plain words.
+export function geolocationError(err) {
+  if (err?.code === 1) return "Location access was blocked. Search for your town instead.";
+  return "Couldn't get your location. Search for your town instead.";
+}
+
 export function placeLabel(p) {
   return [p.name, p.region].filter(Boolean).join(", ");
 }
