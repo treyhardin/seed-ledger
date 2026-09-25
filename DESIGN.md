@@ -313,6 +313,15 @@ All motion is **GSAP**, defined in one module: `src/lib/motion.js`. Content is v
 Phosphor, regular weight only, inlined from the official SVGs in `src/lib/icons.jsx` (`currentColor`, no dependency). The brand mark is the Phosphor plant in a 32px ink square.
 
 
+### "+N more" (MoreSeeds)
+"Sow now" shows at most **3** seed names inline (`READY_CAP` in `Home.jsx`), then a **"+N more"** pill badge in `accent-soft` / `accent-ink`. The badge fills with `accent-ink` on hover or while open.
+- **The panel** lists every ready seed as a button that opens its detail. It's a `bg` panel with a `line` border, `radius-md` corners and `shadow-float`, max 320px tall with its own scroll, and it opens with GSAP `popIn`.
+- **Mouse** opens it on hover. A 180ms grace period plus an invisible bridge let the pointer cross into the panel, and a click keeps it open.
+- **Touch and keyboard** toggle it (Enter/Space). Escape closes it and returns focus to the badge. Clicking outside also closes it.
+- **The pattern** is a disclosure: a button with `aria-expanded` controlling the panel.
+- **Placement:** the panel is nudged left to stay 16px inside the layout width.
+- **Seed names in the Now lines** are inline `role="button"` text rather than `<button>`s. Long names wrap mid-name, and a trailing comma never starts a line.
+
 ### Select (custom dropdown)
 `src/components/Select.jsx` is used for every choice list: months, before/after, last/first frost. There are no native `<select>`s.
 - **Trigger:** matches `.field__input` in height, border, radius and ink focus ring. The value is left-aligned with a caret that rotates when open, and the placeholder is `ink-3`.

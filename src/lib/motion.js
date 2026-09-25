@@ -15,7 +15,9 @@ const narrow = () => window.matchMedia("(max-width: 720px)").matches;
 export function revealHome(root) {
   if (reduced() || !root) return;
   const q = gsap.utils.selector(root);
-  const tl = gsap.timeline();
+  // Entrances clear their inline styles when done, so no leftover transform
+  // creates stacking contexts (e.g. the "+N more" panel must sit on top).
+  const tl = gsap.timeline({ defaults: { clearProps: "transform,opacity" } });
   tl.from(q(".now__row"), { opacity: 0, y: 18, duration: 0.8, stagger: 0.08 })
     .from(q(".almanac__head"), { opacity: 0, y: 10, duration: 0.6 }, "-=0.55")
     .from(q(".almanac__track--scale"), { scaleX: 0, transformOrigin: "left center", duration: 0.9, ease: "power2.inOut" }, "<")
@@ -34,21 +36,21 @@ export function revealHome(root) {
 // Any other view: its sections stagger up.
 export function revealView(root, selector = ":scope > *") {
   if (reduced() || !root) return;
-  gsap.from(root.querySelectorAll(selector), { opacity: 0, y: 16, duration: 0.6, stagger: 0.07 });
+  gsap.from(root.querySelectorAll(selector), { opacity: 0, y: 16, duration: 0.6, stagger: 0.07, clearProps: "transform,opacity" });
 }
 
 // Use as a ref: `ref={appear()}`. Eases an element in when it mounts,
 // e.g. the harvest-date prompt, the second sow time, search results.
 export const appear = (vars = {}) => (el) => {
   if (reduced()) return;
-  gsap.from(el, { opacity: 0, y: 6, duration: 0.45, ...vars });
+  gsap.from(el, { opacity: 0, y: 6, duration: 0.45, clearProps: "transform,opacity", ...vars });
 };
 
 // Use as a ref on a list: its children stagger in.
 export const appearChildren = (vars = {}) => (el) => {
   if (reduced()) return;
   requestAnimationFrame(() =>
-    gsap.from(el.children, { opacity: 0, y: 8, duration: 0.4, stagger: 0.04, ...vars })
+    gsap.from(el.children, { opacity: 0, y: 8, duration: 0.4, stagger: 0.04, clearProps: "transform,opacity", ...vars })
   );
 };
 

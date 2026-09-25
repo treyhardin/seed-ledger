@@ -273,6 +273,41 @@ button { font-family: inherit; cursor: pointer; }
   font-size: var(--font-size-md); font-weight: 500; letter-spacing: 0;
   color: var(--color-ink-3); vertical-align: 0.35em;
 }
+/* "+N more" badge and its hover panel (MoreSeeds) */
+.more { position: relative; display: inline-block; vertical-align: 0.3em; }
+.more__badge {
+  display: inline-flex; align-items: center; height: 32px; padding: 0 var(--space-3);
+  border: none; border-radius: var(--radius-pill);
+  background: var(--color-accent-soft); color: var(--color-accent-ink);
+  font-size: var(--font-size-md); font-weight: 600; letter-spacing: 0;
+  transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.more__badge:hover, .more__badge[aria-expanded="true"] { background: var(--color-accent-ink); color: var(--color-on-ink); }
+.more__panel {
+  position: absolute; top: calc(100% + 8px); left: 0; z-index: 35;
+  width: max-content; min-width: 220px; max-width: min(320px, calc(100vw - 32px));
+  padding: var(--space-2);
+  border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  background: var(--color-bg); box-shadow: var(--shadow-float);
+  font-size: var(--font-size-md); letter-spacing: 0; line-height: 1.4;
+}
+/* Invisible bridge so the pointer can cross the gap without closing it */
+.more__panel::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
+.more__title {
+  display: flex; justify-content: space-between; gap: var(--space-4);
+  padding: var(--space-1) var(--space-2) var(--space-2);
+  font-size: var(--font-size-xs); font-weight: 600; color: var(--color-accent-ink);
+}
+.more__title span { color: var(--color-ink-3); font-variant-numeric: tabular-nums; }
+.more__list { list-style: none; margin: 0; padding: 0; max-height: 320px; overflow-y: auto; overscroll-behavior: contain; }
+.more__item {
+  display: block; width: 100%; min-height: 34px; padding: 0 var(--space-2);
+  border: none; border-radius: var(--radius-xs); background: none;
+  color: var(--color-ink); font-size: var(--font-size-md); font-weight: 500; text-align: left;
+  transition: background var(--dur-fast) ease;
+}
+.more__item:hover, .more__item:focus-visible { background: var(--color-surface); }
+
 .now__line--action { display: flex; align-items: center; gap: var(--space-4) var(--space-5); flex-wrap: wrap; }
 .now__line--action p { font-size: var(--font-size-xl); letter-spacing: var(--tracking-tight); line-height: 1.25; }
 

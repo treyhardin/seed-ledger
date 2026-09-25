@@ -26,9 +26,13 @@ export default function Select(props) {
   function place() {
     const r = trigger.getBoundingClientRect();
     const h = list?.offsetHeight || 0;
-    const below = window.innerHeight - r.bottom;
+    const w = Math.max(list?.offsetWidth || 0, r.width);
+    const vw = document.documentElement.clientWidth; // layout width, no scrollbar
+    const vh = document.documentElement.clientHeight;
+    const below = vh - r.bottom;
     const above = h > below - 8 && r.top > below;
-    setPos({ left: r.left, width: r.width, top: above ? r.top - h - 4 : r.bottom + 4, above, ready: true });
+    const left = Math.max(8, Math.min(r.left, vw - w - 8)); // keep on screen
+    setPos({ left, width: r.width, top: above ? r.top - h - 4 : r.bottom + 4, above, ready: true });
   }
 
   function show() {

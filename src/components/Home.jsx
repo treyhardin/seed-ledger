@@ -2,6 +2,9 @@ import { createMemo, createSignal, createEffect, Show, For, onMount, onCleanup }
 import { status, nextFrost, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
 import Almanac from "./Almanac";
 import SeedCard from "./SeedCard";
+import MoreSeeds from "./MoreSeeds";
+
+const READY_CAP = 3; // names shown inline before "+N more"
 import { revealHome } from "../lib/motion";
 import { Plant, CaretLeft, CaretRight } from "../lib/icons";
 
@@ -41,6 +44,7 @@ export default function Home(props) {
       {p.seed.name}
     </span>
   );
+  const shownReady = () => outlook().ready.slice(0, READY_CAP);
   const frost = createMemo(() => nextFrost(props.settings));
   const outlook = createMemo(() => sowOutlook(list(), props.settings));
 
@@ -72,15 +76,19 @@ export default function Home(props) {
         <Show when={outlook().ready.length}>
           <div class="now__row now__row--live">
             <span class="now__key">Sow now</span>
-            <p class="now__line">
-              <For each={outlook().ready}>
+            <div class="now__line">
+              <For each={shownReady()}>
                 {(r, i) => (
                   <>
-                    <SeedLink seed={r.seed} /><Show when={i() < outlook().ready.length - 1}><span class="now__sep">,</span></Show>{" "}
+                    <SeedLink seed={r.seed} /><Show when={i() < shownReady().length - 1}><span class="now__sep">,</span></Show>{" "}
                   </>
                 )}
               </For>
-            </p>
+              <Show when={outlook().ready.length > READY_CAP}>
+                <MoreSeeds count={outlook().ready.length - READY_CAP} title="Ready to sow"
+                  seeds={outlook().ready.map((r) => r.seed)} onOpen={props.onOpen} />
+              </Show>
+            </div>
           </div>
         </Show>
 
