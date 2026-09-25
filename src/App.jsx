@@ -112,8 +112,12 @@ export default function App() {
 
   // Countdown to the next frost, shown as a badge in the top bar.
   const frost = () => nextFrost(cfg());
+  // Weeks away (rounded); within the final week it reads "this week" / "today".
+  const frostWeeks = (f) => Math.max(1, Math.round(f.days / 7));
+  const frostSoon = (f) => (f.days <= 0 ? "today" : f.days < 7 ? "this week" : null);
   const frostText = (f) =>
-    f.days <= 0 ? `${f.label} today` : `${f.days} ${f.days === 1 ? "day" : "days"} to ${f.label}`;
+    frostSoon(f) ? `${f.label} ${frostSoon(f)}`
+      : `${frostWeeks(f)} ${frostWeeks(f) === 1 ? "week" : "weeks"} to ${f.label}`;
 
   return (
     <div class="layout">
@@ -129,9 +133,11 @@ export default function App() {
             <span class="frost-badge tip" tabindex="0" data-tip={formatMonthDay(f().date)}
               aria-label={`${frostText(f())}, ${formatMonthDay(f().date)}`}>
               <Snowflake size={14} />
-              <Show when={f().days > 0} fallback={<span class="frost-badge__label frost-badge__label--cap">{f().label} today</span>}>
-                <b>{f().days}</b>
-                <span class="frost-badge__label">{f().days === 1 ? "day" : "days"} to {f().label}</span>
+              <Show when={!frostSoon(f())} fallback={
+                <span class="frost-badge__label frost-badge__label--cap">{f().label} {frostSoon(f())}</span>
+              }>
+                <b>{frostWeeks(f())}</b>
+                <span class="frost-badge__label">{frostWeeks(f()) === 1 ? "week" : "weeks"} to {f().label}</span>
               </Show>
             </span>
           )}

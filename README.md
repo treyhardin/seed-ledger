@@ -4,13 +4,20 @@ A small, self-hosted garden planner. Log your seed packets, see when to sow each
 relative to your frost dates, track what's in the ground, and view the whole growing year
 on one timeline.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
+  <img src="docs/screenshot-light.png" alt="Seed Ledger home: seeds to sow now, the next seeds coming up, a frost countdown, and the Almanac year timeline" width="1440">
+</picture>
+
+<sub>Home with demo data: what to sow now, what's next, weeks to first frost, and the Almanac.</sub>
+
 - **Seed library:** depth, spacing, seeds per hole, days to germinate and maturity, soil
   temperature, sun needs, direct sow vs. start indoors (with transplant notes), and free-form notes.
 - **Frost-relative timing:** sow windows are entered as "1–2 weeks before last frost", not
   fixed dates. A seed can have two sow times (e.g. spring and fall). Change your frost dates
   in Settings and every date updates.
-- **Home:** countdowns to the next frost and your next sowing, a "Ready to sow" list of seeds
-  whose window is open today, the Almanac timeline, and what's currently in the ground.
+- **Home:** what to sow now (with a "+N more" list), the next seeds coming up in weeks, a
+  weeks-to-frost countdown in the header, the Almanac timeline, and what's in the ground.
 - **Tracking:** mark a seed planted, then mark it harvested (with a date) to put it back in
   your library for next time.
 

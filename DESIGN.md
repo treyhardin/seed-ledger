@@ -314,7 +314,7 @@ Phosphor, regular weight only, inlined from the official SVGs in `src/lib/icons.
 
 
 ### Frost badge (top bar)
-The countdown to the next frost sits in the top bar, left of the Settings gear. It's a `surface` pill with a snowflake, the day count in bold at `lg` size with tabular figures, then "days to first frost" at `sm` size in `ink-2`. On the day itself it reads "First frost today". The tooltip gives the date (e.g. Nov 15), and the `aria-label` has the full sentence. At 420px and below, the wordmark hides and only the logo mark shows, so the badge fits. The Home "Now" block no longer has a Frost row; it keeps Home within the viewport.
+The countdown to the next frost sits in the top bar, left of the Settings gear. It's a `surface` pill with a snowflake, the week count in bold at `lg` size with tabular figures (rounded), then "weeks to first frost" at `sm` size in `ink-2`. In the final week it reads "First frost this week", and on the day "First frost today". The tooltip gives the date (e.g. Nov 15), and the `aria-label` has the full sentence. At 420px and below, the wordmark hides and only the logo mark shows, so the badge fits. The Home "Now" block no longer has a Frost row; it keeps Home within the viewport.
 
 ### Now block (max-state rules)
 - **Sow now:** up to 3 seeds, **one per line** at `--font-size-now` (clamp 1.5–2.25rem), weight 700 and underlined. Long names truncate with an ellipsis. The **"+N more"** badge sits under the "Sow now" label in the key column.
