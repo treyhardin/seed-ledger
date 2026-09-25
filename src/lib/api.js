@@ -1,3 +1,5 @@
+import { IS_DEMO, demoSeeds, DEMO_SETTINGS } from "./demo";
+
 const base = "/api/seeds";
 
 async function json(res) {
@@ -8,7 +10,7 @@ async function json(res) {
   return res.status === 204 ? null : res.json();
 }
 
-export const api = {
+const serverApi = {
   list: () => fetch(base).then(json),
   getSettings: () => fetch("/api/settings").then(json),
   updateSettings: (data) =>
@@ -38,3 +40,19 @@ export const api = {
     }).then(json),
   reset: () => fetch("/api/reset", { method: "POST" }).then(json),
 };
+
+// Demo mode: everything lives in memory; seeds are read-only, frost dates can
+// change for the visit. Nothing touches a server.
+const demoStore = { seeds: IS_DEMO ? demoSeeds() : [], settings: { ...DEMO_SETTINGS } };
+const readOnly = () => Promise.reject(new Error("Seeds can't be changed in the demo."));
+const demoApi = {
+  list: () => Promise.resolve(demoStore.seeds.map((s) => ({ ...s }))),
+  getSettings: () => Promise.resolve({ ...demoStore.settings }),
+  updateSettings: (data) => {
+    for (const key of ["last_frost", "first_frost"]) if (data[key]) demoStore.settings[key] = data[key];
+    return Promise.resolve({ ...demoStore.settings });
+  },
+  create: readOnly, update: readOnly, remove: readOnly, importData: readOnly, reset: readOnly,
+};
+
+export const api = IS_DEMO ? demoApi : serverApi;

@@ -4,6 +4,7 @@ import FrostDateInput from "./FrostDateInput";
 import ConfirmModal from "./ConfirmModal";
 import ImportButton from "./ImportButton";
 import { revealView } from "../lib/motion";
+import { IS_DEMO } from "../lib/demo";
 import { COLOR_MODES, getColorMode, setColorMode } from "../lib/theme";
 
 export default function Settings(props) {
@@ -44,7 +45,9 @@ export default function Settings(props) {
               <Show when={s().zone}><span class="settings-location__zone">Zone {s().zone}</span></Show>
             </Show>
           </div>
-          <button class="btn" onClick={props.onLookup}>Look up by location</button>
+          <Show when={!IS_DEMO}>
+            <button class="btn" onClick={props.onLookup}>Look up by location</button>
+          </Show>
         </div>
 
         {FrostField({ key: "last_frost", title: "Average last spring frost", help: "The last freeze before the growing season — the \"after last frost\" anchor." })}
@@ -69,6 +72,8 @@ export default function Settings(props) {
         </div>
       </section>
 
+      {/* Demo mode: no backups or reset */}
+      <Show when={!IS_DEMO}>
       <section class="settings-panel">
         <div class="settings-panel__head">
           <h2>Backup &amp; transfer</h2>
@@ -90,6 +95,8 @@ export default function Settings(props) {
         </div>
         <div><button class="btn btn--danger" onClick={() => setConfirming(true)}><Trash size={16} /> Reset app data</button></div>
       </section>
+
+      </Show>
 
       <Show when={confirming()}>
         <ConfirmModal

@@ -126,6 +126,17 @@ button { font-family: inherit; cursor: pointer; }
 }
 .topbar__gear { display: inline-flex; }
 .topbar__end { display: flex; align-items: center; gap: var(--space-2); }
+.topbar__start { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+
+/* Demo mode indicator (links to the repo) */
+.demo-pill {
+  display: inline-flex; align-items: center; height: 24px; padding: 0 var(--space-2);
+  border: 1px solid var(--color-line-strong); border-radius: var(--radius-pill);
+  color: var(--color-ink-2); font-size: var(--font-size-xs); font-weight: 600; text-decoration: none;
+  transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+.demo-pill:hover { border-color: var(--color-ink); color: var(--color-ink); }
+.topbar .demo-pill.tip::after { left: 0; right: auto; }
 
 /* Frost countdown badge: the number leads */
 .frost-badge {

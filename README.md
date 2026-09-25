@@ -194,6 +194,26 @@ server/        Express API and database setup (schema + migrations in db.js)
 src/           Solid app (components/, lib/garden.js for the date and timing logic)
 ```
 
+## Demo mode
+
+Build with `DEMO_MODE=true` to get a self-contained, read-only demo that you can host on any
+static host (Vercel, Netlify, GitHub Pages):
+
+```bash
+DEMO_MODE=true npm run build   # output in dist/
+```
+
+- It runs entirely in the browser with a built-in demo garden that covers every season, so
+  there's always something to sow. There's no server and no database.
+- Seeds can't be added, edited, deleted, planted or harvested.
+- Visitors can change the frost dates and color mode. Frost-date changes last only for the
+  visit and reset on reload.
+- A small **Demo** badge in the header links back to this repo.
+
+**On Vercel:** import the repo (the Vite preset works as-is), add an environment variable
+`DEMO_MODE` = `true`, and deploy. `DEMO_MODE` is read at build time, so redeploy after
+changing it. Normal builds and the Docker image never include the demo data.
+
 ## Security
 
 Seed Ledger has **no authentication**. Anyone who can reach the port can view and edit your

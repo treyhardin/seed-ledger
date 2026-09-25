@@ -8,6 +8,7 @@ import SetupModal from "./components/SetupModal";
 import Toasts from "./components/Toasts";
 import { Plus, Plant, Gear, Snowflake } from "./lib/icons";
 import { closeDialog, spin } from "./lib/motion";
+import { IS_DEMO, REPO_URL } from "./lib/demo";
 
 export default function App() {
   const [seeds, { refetch, mutate }] = createResource(api.list);
@@ -123,10 +124,16 @@ export default function App() {
     <div class="layout">
       <header class="topbar">
         <div class="topbar__inner">
+        <div class="topbar__start">
         <button class="brand" onClick={() => go("home")} aria-label="Seed Ledger home">
           <span class="mark"><Plant size={19} /></span>
           <span class="brand__name">Seed Ledger</span>
         </button>
+        <Show when={IS_DEMO}>
+          <a class="demo-pill tip" href={REPO_URL} target="_blank" rel="noopener"
+            data-tip="Demo data, nothing is saved. View on GitHub">Demo</a>
+        </Show>
+        </div>
         <div class="topbar__end">
         <Show when={!loading() && frost()}>
           {(f) => (
@@ -172,9 +179,11 @@ export default function App() {
         </main>
       </div>
 
-      <button class="fab" onClick={openNew} aria-label="Add seed">
-        <Plus size={18} /> <span>Add seed</span>
-      </button>
+      <Show when={!IS_DEMO}>
+        <button class="fab" onClick={openNew} aria-label="Add seed">
+          <Plus size={18} /> <span>Add seed</span>
+        </button>
+      </Show>
 
       <Toasts toasts={toasts()} onDismiss={dismissToast} />
 

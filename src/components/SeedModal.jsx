@@ -10,6 +10,7 @@ import {
 import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
 import { dialogIn } from "../lib/motion";
+import { IS_DEMO } from "../lib/demo";
 import Progress from "./Progress";
 import HarvestButton from "./HarvestButton";
 
@@ -135,20 +136,22 @@ export default function SeedModal(props) {
           <div class="modal__body">
             <Detail seed={seed()} settings={props.settings} />
           </div>
-          <footer class="modal__foot modal__foot--split">
-            <button class="btn btn--icon tip" data-tip="Delete seed" aria-label="Delete seed" onClick={handleDelete}><Trash size={16} /></button>
-            <div class="modal__foot-right">
-              <Show when={st() === "library"}>
-                <button class="btn btn--primary" onClick={() => props.onMarkPlanted(seed())}>
-                  <Shovel size={16} /> Mark planted
-                </button>
-              </Show>
-              <Show when={st() === "growing"}>
-                <HarvestButton min={seed().planted_date} onConfirm={(d) => props.onMarkHarvested(seed(), d)} />
-              </Show>
-              <button class="btn" onClick={() => setMode("edit")}><PencilSimple size={16} /> Edit</button>
-            </div>
-          </footer>
+          <Show when={!IS_DEMO}>
+            <footer class="modal__foot modal__foot--split">
+              <button class="btn btn--icon tip" data-tip="Delete seed" aria-label="Delete seed" onClick={handleDelete}><Trash size={16} /></button>
+              <div class="modal__foot-right">
+                <Show when={st() === "library"}>
+                  <button class="btn btn--primary" onClick={() => props.onMarkPlanted(seed())}>
+                    <Shovel size={16} /> Mark planted
+                  </button>
+                </Show>
+                <Show when={st() === "growing"}>
+                  <HarvestButton min={seed().planted_date} onConfirm={(d) => props.onMarkHarvested(seed(), d)} />
+                </Show>
+                <button class="btn" onClick={() => setMode("edit")}><PencilSimple size={16} /> Edit</button>
+              </div>
+            </footer>
+          </Show>
         </Show>
         </Show>
       </div>

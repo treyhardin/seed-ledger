@@ -4,6 +4,7 @@ import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
 import Progress from "./Progress";
 import HarvestButton from "./HarvestButton";
+import { IS_DEMO } from "../lib/demo";
 
 export default function SeedCard(props) {
   const seed = () => props.seed;
@@ -37,7 +38,7 @@ export default function SeedCard(props) {
         <p class="card__notes">{seed().notes}</p>
       </Show>
 
-      <Show when={state() === "growing"}>
+      <Show when={state() === "growing" && !IS_DEMO}>
         <footer class="card__actions">
           <HarvestButton min={seed().planted_date} onConfirm={(d) => props.onMarkHarvested(seed(), d)} />
         </footer>
