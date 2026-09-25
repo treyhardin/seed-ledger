@@ -1,5 +1,5 @@
 import { createMemo, createSignal, createEffect, Show, For, onMount, onCleanup } from "solid-js";
-import { status, nextFrost, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
+import { status, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
 import Almanac from "./Almanac";
 import SeedCard from "./SeedCard";
 import MoreSeeds from "./MoreSeeds";
@@ -45,7 +45,6 @@ export default function Home(props) {
     </span>
   );
   const shownReady = () => outlook().ready.slice(0, READY_CAP);
-  const frost = createMemo(() => nextFrost(props.settings));
   const outlook = createMemo(() => sowOutlook(list(), props.settings));
 
   const carousel = (rows) => (
@@ -113,18 +112,6 @@ export default function Home(props) {
           )}
         </Show>
 
-        <Show when={frost()}>
-          <div class="now__row">
-            <span class="now__key">Frost</span>
-            <p class="now__line">
-              <span class="now__cap">{frost().label}</span>{" "}
-              <span class="now__meta">
-                {frost().weeks >= 1 ? `in ${frost().weeks} ${frost().weeks === 1 ? "week" : "weeks"}` : frost().days <= 0 ? "today" : "this week"}
-              </span>
-              <span class="now__date">{formatMonthDay(frost().date)}</span>
-            </p>
-          </div>
-        </Show>
       </section>
 
       <Show when={list().length}>

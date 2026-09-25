@@ -313,6 +313,9 @@ All motion is **GSAP**, defined in one module: `src/lib/motion.js`. Content is v
 Phosphor, regular weight only, inlined from the official SVGs in `src/lib/icons.jsx` (`currentColor`, no dependency). The brand mark is the Phosphor plant in a 32px ink square.
 
 
+### Frost badge (top bar)
+The countdown to the next frost sits in the top bar, left of the Settings gear. It's a `surface` pill with a snowflake, the day count in bold at `lg` size with tabular figures, then "days to first frost" at `sm` size in `ink-2`. On the day itself it reads "First frost today". The tooltip gives the date (e.g. Nov 15), and the `aria-label` has the full sentence. At 420px and below, the wordmark hides and only the logo mark shows, so the badge fits. The Home "Now" block no longer has a Frost row; it keeps Home within the viewport.
+
 ### "+N more" (MoreSeeds)
 "Sow now" shows at most **3** seed names inline (`READY_CAP` in `Home.jsx`), then a **"+N more"** pill badge in `accent-soft` / `accent-ink`. The badge fills with `accent-ink` on hover or while open.
 - **The panel** lists every ready seed as a button that opens its detail. It's a `bg` panel with a `line` border, `radius-md` corners and `shadow-float`, max 320px tall with its own scroll, and it opens with GSAP `popIn`.

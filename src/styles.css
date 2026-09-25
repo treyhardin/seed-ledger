@@ -125,6 +125,19 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
 }
 .topbar__gear { display: inline-flex; }
+.topbar__end { display: flex; align-items: center; gap: var(--space-2); }
+
+/* Frost countdown badge: the number leads */
+.frost-badge {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  height: 32px; padding: 0 var(--space-3); border-radius: var(--radius-pill);
+  background: var(--color-surface); color: var(--color-ink-2);
+  font-size: var(--font-size-sm); white-space: nowrap;
+}
+.frost-badge svg { align-self: center; color: var(--color-ink-3); }
+.frost-badge b { font-size: var(--font-size-lg); font-weight: 700; color: var(--color-ink); font-variant-numeric: tabular-nums; line-height: 32px; }
+.frost-badge__label { line-height: 32px; }
+.frost-badge__label--cap::first-letter { text-transform: uppercase; }
 .brand {
   display: flex; align-items: center; gap: var(--space-3);
   padding: 0; border: none; background: none; color: var(--color-ink);
@@ -204,8 +217,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 .tip:hover::after, .tip:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
 /* In the top bar there is no room above: open below, right-aligned */
-.topbar__settings.tip::after { top: calc(100% + 8px); bottom: auto; left: auto; right: 0; transform: translateY(-4px); }
-.topbar__settings.tip:hover::after, .topbar__settings.tip:focus-visible::after { transform: none; }
+.topbar .tip::after { top: calc(100% + 8px); bottom: auto; left: auto; right: 0; transform: translateY(-4px); }
+.topbar .tip:hover::after, .topbar .tip:focus-visible::after { transform: none; }
 
 /* ---------- Toasts ---------- */
 .toasts {
@@ -771,7 +784,7 @@ textarea.field__input { resize: vertical; line-height: 1.45; }
 }
 
 @media (max-width: 420px) {
-  .brand__name { font-size: var(--font-size-md); }
+  .brand__name { display: none; } /* logo mark only; room for the frost badge */
   .month { font-size: var(--font-size-2xs); padding-left: 3px; }
   .fab span { display: none; }
   .fab { width: 52px; height: 52px; padding: 0; justify-content: center; }

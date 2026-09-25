@@ -1,12 +1,12 @@
 import { createResource, createSignal, Show } from "solid-js";
 import { api } from "./lib/api";
-import { DEFAULT_SETTINGS, todayISO } from "./lib/garden";
+import { DEFAULT_SETTINGS, todayISO, nextFrost, formatMonthDay } from "./lib/garden";
 import Home from "./components/Home";
 import Settings from "./components/Settings";
 import SeedModal from "./components/SeedModal";
 import SetupModal from "./components/SetupModal";
 import Toasts from "./components/Toasts";
-import { Plus, Plant, Gear } from "./lib/icons";
+import { Plus, Plant, Gear, Snowflake } from "./lib/icons";
 import { closeDialog, spin } from "./lib/motion";
 
 export default function App() {
@@ -110,6 +110,11 @@ export default function App() {
 
   const loading = () => seeds.loading || settings.loading;
 
+  // Countdown to the next frost, shown as a badge in the top bar.
+  const frost = () => nextFrost(cfg());
+  const frostText = (f) =>
+    f.days <= 0 ? `${f.label} today` : `${f.days} ${f.days === 1 ? "day" : "days"} to ${f.label}`;
+
   return (
     <div class="layout">
       <header class="topbar">
@@ -118,6 +123,19 @@ export default function App() {
           <span class="mark"><Plant size={19} /></span>
           <span class="brand__name">Seed Ledger</span>
         </button>
+        <div class="topbar__end">
+        <Show when={!loading() && frost()}>
+          {(f) => (
+            <span class="frost-badge tip" tabindex="0" data-tip={formatMonthDay(f().date)}
+              aria-label={`${frostText(f())}, ${formatMonthDay(f().date)}`}>
+              <Snowflake size={14} />
+              <Show when={f().days > 0} fallback={<span class="frost-badge__label frost-badge__label--cap">{f().label} today</span>}>
+                <b>{f().days}</b>
+                <span class="frost-badge__label">{f().days === 1 ? "day" : "days"} to {f().label}</span>
+              </Show>
+            </span>
+          )}
+        </Show>
         <button
           class="btn btn--icon topbar__settings tip"
           classList={{ "topbar__settings--active": view() === "settings" }}
@@ -128,6 +146,7 @@ export default function App() {
         >
           <span class="topbar__gear" ref={gearIcon}><Gear size={20} /></span>
         </button>
+        </div>
         </div>
       </header>
 
