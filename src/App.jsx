@@ -1,19 +1,17 @@
 import { createResource, createSignal, Show } from "solid-js";
 import { api } from "./lib/api";
 import { DEFAULT_SETTINGS, todayISO } from "./lib/garden";
-import Sidebar from "./components/Sidebar";
 import Home from "./components/Home";
-import SeedsTable from "./components/SeedsTable";
 import Settings from "./components/Settings";
 import SeedModal from "./components/SeedModal";
 import SetupModal from "./components/SetupModal";
 import Toasts from "./components/Toasts";
-import { Plus } from "./lib/icons";
+import { Plus, Plant, Gear } from "./lib/icons";
 
 export default function App() {
   const [seeds, { refetch, mutate }] = createResource(api.list);
   const [settings, { mutate: mutateSettings, refetch: refetchSettings }] = createResource(api.getSettings);
-  const [view, setView] = createSignal("home");
+  const [view, setView] = createSignal("home"); // home | settings
   const [modal, setModal] = createSignal(null); // null | { id: number|null, mode: 'view'|'edit' }
   const [toasts, setToasts] = createSignal([]);
   const [lookupOpen, setLookupOpen] = createSignal(false); // setup modal opened from Settings/Home
@@ -110,17 +108,29 @@ export default function App() {
 
   return (
     <div class="layout">
-      <Sidebar view={view()} onNav={setView} />
+      <header class="topbar">
+        <button class="brand" onClick={() => setView("home")} aria-label="Seed Ledger home">
+          <span class="mark"><Plant size={19} /></span>
+          <span class="brand__name">Seed Ledger</span>
+        </button>
+        <button
+          class="btn btn--icon topbar__settings tip"
+          classList={{ "topbar__settings--active": view() === "settings" }}
+          data-tip={view() === "settings" ? "Close settings" : "Settings"}
+          aria-label="Settings"
+          aria-pressed={view() === "settings"}
+          onClick={() => setView(view() === "settings" ? "home" : "settings")}
+        >
+          <Gear size={20} />
+        </button>
+      </header>
 
       <div class="main">
-        <main class="content" classList={{ "content--wide": view() === "seeds" }}>
+        <main class="content">
           <Show when={!loading()} fallback={<p class="loading">Reading the ledger…</p>}>
             <Show when={view() === "home"}>
               <Home seeds={list()} settings={cfg()} onOpen={openSeed} onMarkHarvested={markHarvested}
                 onSetup={() => setLookupOpen(true)} />
-            </Show>
-            <Show when={view() === "seeds"}>
-              <SeedsTable seeds={list()} settings={cfg()} onOpen={openSeed} onAdd={openNew} />
             </Show>
             <Show when={view() === "settings"}>
               <Settings settings={cfg()} onSave={saveSettings} seedCount={list().length}

@@ -33,7 +33,7 @@ Tokens live on `:root` in `src/styles.css`; dark mode remaps them under `@media 
 
 ## The drafting grammar (signature)
 
-- **Title block** (`.titleblock`): a ruled box of PROJECT / ZONE / SCALE / DATE, top-right of the almanac. Echoed by the sidebar's `Drawing index` + sheet codes (A-01…A-03) and the footer notes.
+- **Title block** (`.titleblock`): a ruled box of PROJECT / ZONE / SCALE / DATE, top-right of the almanac.
 - **The Almanac** (`components/Almanac.jsx`): the year as a **dimensioned timeline**. A month axis with tick-stations along a datum rule; each seed a run of **sow (filled square ▪) → dashed growing run → harvest (red diamond �diamond)**; the two frost dates as **dashed blue datum lines with flags**; **today** as a solid red datum with a filled flag tag. Marks/datums live in a `.almanac__lines` overlay offset by `--almanac-label` so they register exactly with the axis.
 - **Spec callouts** (`.card`): flat bordered panels — name, a bordered spec cell (`.specs`), sow/harvest as ruled dimension notes (`.windows`), a status tag whose ▪/◇ marker matches the almanac.
 - **Plant schedule** (`.seeds-table`): a read-only ruled schedule; mono uppercase headers, seed name pinned left + status tag beneath, sun as a symbol with a CSS tooltip, delete pinned right.

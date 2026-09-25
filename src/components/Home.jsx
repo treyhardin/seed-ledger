@@ -1,6 +1,6 @@
 import { createMemo, Show, For } from "solid-js";
 import { status, nextFrost, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
-import { Snowflake, Seedling } from "../lib/icons";
+import { Snowflake, Plant } from "../lib/icons";
 import Almanac from "./Almanac";
 import SeedCard from "./SeedCard";
 
@@ -53,7 +53,7 @@ export default function Home(props) {
         <Show when={outlook().next}>
           {(next) => (
             <div class="countdown countdown--sow">
-              <span class="countdown__ico"><Seedling size={20} /></span>
+              <span class="countdown__ico"><Plant size={20} /></span>
               <p class="countdown__text">
                 <Show
                   when={next().weeks >= 1}
@@ -72,7 +72,7 @@ export default function Home(props) {
         {/* Ready to sow: every library seed whose sow window is open today */}
         <Show when={outlook().ready.length}>
           <section class="ready" aria-label="Ready to sow">
-            <h2 class="ready__title"><Seedling size={16} /> Ready to sow <span class="count">{outlook().ready.length}</span></h2>
+            <h2 class="ready__title"><Plant size={16} /> Ready to sow <span class="count">{outlook().ready.length}</span></h2>
             <ul class="ready__list">
               <For each={outlook().ready}>
                 {(r) => (

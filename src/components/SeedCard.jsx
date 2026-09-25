@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 import { status, expectedHarvest, daysSince, formatDate } from "../lib/garden";
-import { CalendarDots, Seedling } from "../lib/icons";
+import { CalendarDots, Plant } from "../lib/icons";
 import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
 import HarvestButton from "./HarvestButton";
@@ -38,7 +38,7 @@ export default function SeedCard(props) {
       <Show when={state() === "growing"}>
         <div class="progress">
           <p class="progress__line">
-            <Seedling size={16} /> In the ground <b>{daysSince(seed().planted_date)}</b> days
+            <Plant size={16} /> In the ground <b>{daysSince(seed().planted_date)}</b> days
             <span> · sown {formatDate(seed().planted_date)}</span>
           </p>
           <Show when={expectedHarvest(seed())}>

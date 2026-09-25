@@ -1,6 +1,6 @@
 import { createSignal, Show } from "solid-js";
 import { todayISO } from "../lib/garden";
-import { Scythe, X } from "../lib/icons";
+import { Basket, X } from "../lib/icons";
 
 // "Mark harvested" that first asks for the harvest date (defaults to today).
 export default function HarvestButton(props) {
@@ -21,7 +21,7 @@ export default function HarvestButton(props) {
   return (
     <Show when={open()} fallback={
       <button class="btn btn--harvest" onClick={start}>
-        <Scythe size={16} /> Mark harvested
+        <Basket size={16} /> Mark harvested
       </button>
     }>
       <form class="date-prompt" onSubmit={confirm}>

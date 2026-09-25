@@ -3,7 +3,7 @@ import SeedFields from "./SeedFields";
 import {
   status, START_METHOD, rangeLabel, expectedHarvest, formatDate, daysSince,
 } from "../lib/garden";
-import { X, Seedling, Scythe, Trash } from "../lib/icons";
+import { X, Plant, Shovel, Basket, Trash } from "../lib/icons";
 import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
 import HarvestButton from "./HarvestButton";
@@ -31,7 +31,7 @@ function Detail(props) {
       <Show when={st() === "growing"}>
         <div class="progress">
           <p class="progress__line">
-            <Seedling size={16} /> In the ground <b>{daysSince(seed().planted_date)}</b> days
+            <Plant size={16} /> In the ground <b>{daysSince(seed().planted_date)}</b> days
             <span> · sown {formatDate(seed().planted_date)}</span>
           </p>
           <Show when={expectedHarvest(seed())}>
@@ -40,7 +40,7 @@ function Detail(props) {
         </div>
       </Show>
       <Show when={st() === "library" && seed().harvested_date}>
-        <p class="card__harvested"><Scythe size={15} /> Last harvested {formatDate(seed().harvested_date)}</p>
+        <p class="card__harvested"><Basket size={15} /> Last harvested {formatDate(seed().harvested_date)}</p>
       </Show>
 
       <div class="detail__grid">
@@ -138,7 +138,7 @@ export default function SeedModal(props) {
             <div class="modal__foot-right">
               <Show when={st() === "library"}>
                 <button class="btn btn--primary" onClick={() => props.onMarkPlanted(seed())}>
-                  <Seedling size={16} /> Mark planted
+                  <Shovel size={16} /> Mark planted
                 </button>
               </Show>
               <Show when={st() === "growing"}>

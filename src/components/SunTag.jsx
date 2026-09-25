@@ -1,8 +1,8 @@
 import { For, Show } from "solid-js";
 import { sunList, sunLabel } from "../lib/garden";
-import { Sun, SunCloud, Cloud } from "../lib/icons";
+import { Sun, CloudSun, Cloud } from "../lib/icons";
 
-const ICON = { full: Sun, partial: SunCloud, shade: Cloud };
+const ICON = { full: Sun, partial: CloudSun, shade: Cloud };
 
 // Renders the sun-amount icon(s) for a seed, with a hover tooltip and an
 // optional inline text label. Used in the table, cards, and detail modal.

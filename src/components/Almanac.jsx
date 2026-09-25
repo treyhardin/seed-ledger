@@ -53,14 +53,15 @@ export default function Almanac(props) {
         const nextSow = wins.length ? Math.min(...wins.map(untilSow)) : null;
         return { seed: s, wins, nextSow, growing: status(s) === "growing", harvest: expectedHarvest(s) };
       })
-      .filter((r) => r.nextSow != null)
-      // Planted seeds first, by soonest expected harvest; then the rest by soonest sow.
+      // Every seed gets a row (the almanac doubles as the seed list): planted
+      // seeds first by soonest expected harvest, then by soonest sow, then
+      // seeds with no sow timing yet.
       .sort((a, b) => {
         if (a.growing !== b.growing) return a.growing ? -1 : 1;
         if (a.growing) {
           const d = (a.harvest ?? Infinity) - (b.harvest ?? Infinity);
           if (d) return d;
-        } else if (a.nextSow !== b.nextSow) return a.nextSow - b.nextSow;
+        } else if (a.nextSow !== b.nextSow) return (a.nextSow ?? Infinity) - (b.nextSow ?? Infinity);
         return a.seed.name.localeCompare(b.seed.name);
       })
   );
@@ -122,7 +123,7 @@ export default function Almanac(props) {
             <Show when={lastFrost() != null}><div class="datum datum--frost" style={{ left: pct(lastFrost()) }}></div></Show>
           </div>
 
-          <For each={rows()} fallback={<p class="almanac__empty">No seeds with planting timing yet.</p>}>
+          <For each={rows()} fallback={<p class="almanac__empty">No seeds yet.</p>}>
             {(r) => {
               const isActive = status(r.seed) === "growing";
               return (
@@ -131,6 +132,9 @@ export default function Almanac(props) {
                     {r.seed.name}
                   </button>
                   <div class="almanac__track">
+                    <Show when={!r.wins.length}>
+                      <span class="almanac__untimed">No sow timing</span>
+                    </Show>
                     <For each={r.wins}>
                       {(w) => {
                         // Sow band spans the window; a single-week window renders as a square.
