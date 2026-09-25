@@ -1,10 +1,11 @@
 import { createMemo, createSignal, createEffect, Show, For, onMount, onCleanup } from "solid-js";
-import { status, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
+import { status, sowOutlook, hasFrostDates } from "../lib/garden";
 import Almanac from "./Almanac";
 import SeedCard from "./SeedCard";
 import MoreSeeds from "./MoreSeeds";
 
 const READY_CAP = 3; // names shown inline before "+N more"
+const NEXT_COUNT = 3; // upcoming seeds shown under Next
 import { revealHome } from "../lib/motion";
 import { Plant, CaretLeft, CaretRight } from "../lib/icons";
 
@@ -45,6 +46,9 @@ export default function Home(props) {
     </span>
   );
   const shownReady = () => outlook().ready.slice(0, READY_CAP);
+  const nextUp = () => outlook().upcoming.slice(0, NEXT_COUNT);
+  const whenLabel = (u) =>
+    u.weeks >= 1 ? `in ${u.weeks} ${u.weeks === 1 ? "week" : "weeks"}` : u.days <= 1 ? "tomorrow" : "this week";
   const outlook = createMemo(() => sowOutlook(list(), props.settings));
 
   const carousel = (rows) => (
@@ -91,25 +95,22 @@ export default function Home(props) {
           </div>
         </Show>
 
-        <Show when={outlook().next}>
-          {(next) => (
-            <div class="now__row">
-              <span class="now__key">Next</span>
-              <p class="now__line">
-                <For each={next().seeds}>
-                  {(seed, i) => (
-                    <>
-                      <SeedLink seed={seed} /><Show when={i() < next().seeds.length - 1}><span class="now__sep">,</span></Show>{" "}
-                    </>
-                  )}
-                </For>
-                <span class="now__meta">
-                  {next().weeks >= 1 ? `in ${next().weeks} ${next().weeks === 1 ? "week" : "weeks"}` : next().days <= 1 ? "tomorrow" : "this week"}
-                </span>
-                <span class="now__date">{formatMonthDay(next().date)}</span>
-              </p>
+        {/* Next: the next few seeds whose sow windows are coming up */}
+        <Show when={nextUp().length}>
+          <div class="now__row">
+            <span class="now__key">Next</span>
+            <div class="now__line">
+              <For each={nextUp()}>
+                {(u, i) => (
+                  <>
+                    <SeedLink seed={u.seed} />{" "}
+                    <span class="now__meta">{whenLabel(u)}</span>
+                    <Show when={i() < nextUp().length - 1}><span class="now__sep">,</span></Show>{" "}
+                  </>
+                )}
+              </For>
             </div>
-          )}
+          </div>
         </Show>
 
       </section>

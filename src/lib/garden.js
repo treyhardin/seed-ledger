@@ -159,12 +159,14 @@ export function nextFrost(settings, now = new Date()) {
   return { ...next, days, weeks: Math.round(days / 7) };
 }
 
-// Sowing outlook for unplanted (library) seeds: which sow windows are open
-// today, and the soonest window still to open (every seed that opens that day).
+// Sowing outlook for unplanted (library) seeds:
+//   ready    — every seed whose sow window is open today (closing soonest first)
+//   upcoming — seeds whose next window hasn't opened yet, soonest first, one
+//              entry per seed (its earliest upcoming window); excludes ready seeds
 export function sowOutlook(seeds, settings, now = new Date()) {
   const t = yearFraction(now);
   const ready = [];
-  let next = null;
+  const soonest = new Map(); // seed → earliest upcoming window
   for (const seed of seeds.filter((s) => status(s) === "library")) {
     for (const w of sowWindows(seed, settings)) {
       const width = (w.end - w.start + 1) % 1;
@@ -174,13 +176,16 @@ export function sowOutlook(seeds, settings, now = new Date()) {
         continue;
       }
       const days = Math.round(((w.start - t + 1) % 1) * 365);
-      if (!next || days < next.days) next = { days, date: w.startDate, seeds: [seed] };
-      else if (days === next.days && !next.seeds.includes(seed)) next.seeds.push(seed);
+      const cur = soonest.get(seed);
+      if (!cur || days < cur.days) soonest.set(seed, { seed, days, weeks: Math.round(days / 7), date: w.startDate });
     }
   }
   ready.sort((a, b) => a.left - b.left || a.seed.name.localeCompare(b.seed.name));
-  if (next) next.weeks = Math.round(next.days / 7);
-  return { ready, next };
+  const readySet = new Set(ready.map((r) => r.seed));
+  const upcoming = [...soonest.values()]
+    .filter((u) => !readySet.has(u.seed))
+    .sort((a, b) => a.days - b.days || a.seed.name.localeCompare(b.seed.name));
+  return { ready, upcoming };
 }
 
 // A concrete date for the sow / harvest of a seed, for card display.
