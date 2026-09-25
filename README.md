@@ -55,7 +55,7 @@ dates, so a fresh install starts by asking for them:
 
 - **Use my current location:** share your location with the browser. This only works when the
   app is opened over HTTPS or on `localhost`, since browsers block location access on plain-HTTP
-  pages. Behind Tailscale HTTPS or Cloudflare it works; at `http://<server-ip>:3000` the button hides.
+  pages. Behind Tailscale HTTPS or Cloudflare it works; at `http://<server-ip>:3000` the button is disabled with a note explaining why.
 - **Look up by location:** search for your town. Seed Ledger downloads about 30 years of
   daily low temperatures for that spot, then estimates your typical frost dates and your
   USDA hardiness zone. This works worldwide, including the Southern Hemisphere. Places that

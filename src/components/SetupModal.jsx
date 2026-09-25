@@ -1,5 +1,5 @@
 import { createSignal, Show, For, Switch, Match } from "solid-js";
-import { searchPlaces, estimateClimate, placeLabel, canGeolocate, currentPlace, geolocationError } from "../lib/climate";
+import { searchPlaces, estimateClimate, placeLabel, canGeolocate, geolocationBlockedReason, currentPlace, geolocationError } from "../lib/climate";
 import { formatMonthDay } from "../lib/garden";
 import { X, MapPin, Crosshair } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
@@ -105,12 +105,17 @@ export default function SetupModal(props) {
                 location or search for your town, and Seed Ledger will estimate them from 30 years
                 of local weather.
               </p>
-              <Show when={canGeolocate()}>
-                <button class="btn btn--primary setup-locate" onClick={locate} disabled={!!busy()}>
-                  <Crosshair size={16} /> Use my current location
-                </button>
-                <p class="setup-or"><span>or search for your town</span></p>
+              <button class="btn btn--primary setup-locate" onClick={locate}
+                disabled={!!busy() || !canGeolocate()} aria-describedby="locate-note">
+                <Crosshair size={16} /> Use my current location
+              </button>
+              <Show when={geolocationBlockedReason()}>
+                <p class="setup__note" id="locate-note">
+                  {geolocationBlockedReason()}{" "}
+                  <a href="https://github.com/treyhardin/seed-ledger#first-run-setup" target="_blank" rel="noopener">Learn more</a>
+                </p>
               </Show>
+              <p class="setup-or"><span>or search for your town</span></p>
               <form class="setup-search" onSubmit={search}>
                 <input class="field__input" type="search" placeholder="Town or city, e.g. Portland"
                   aria-label="Town or city" value={query()} onInput={(e) => setQuery(e.currentTarget.value)} />

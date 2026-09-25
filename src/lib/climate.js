@@ -24,8 +24,18 @@ export async function searchPlaces(query) {
 
 // Browser location. Only offered in a secure context (HTTPS or localhost) —
 // browsers block geolocation on plain-HTTP pages.
-export const canGeolocate = () =>
-  typeof navigator !== "undefined" && "geolocation" in navigator && window.isSecureContext;
+export const canGeolocate = () => !geolocationBlockedReason();
+
+// Why browser location isn't available here, or null if it is.
+export function geolocationBlockedReason() {
+  if (typeof navigator === "undefined" || !("geolocation" in navigator)) {
+    return "This browser doesn't support location detection.";
+  }
+  if (!window.isSecureContext) {
+    return "Location detection needs HTTPS. Browsers only share your location with secure pages, so it's off when Seed Ledger is opened over plain HTTP.";
+  }
+  return null;
+}
 
 // Resolves to a place ({ name, region, latitude, longitude }). Coordinates are
 // rounded to ~1 km before leaving the browser (the weather grid is ~10 km).
