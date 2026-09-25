@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import db, { DB_PATH } from "./db.js";
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "10mb" })); // room for large backup imports
 
 // `--dev`: API only on a fixed port (Vite serves the UI and proxies /api here).
 // Otherwise: one process serves the built UI from dist/ plus the API on PORT.
@@ -90,6 +90,48 @@ app.put("/api/settings", (req, res) => {
   }
   const rows = db.prepare("SELECT key, value FROM settings").all();
   res.json(Object.fromEntries(rows.map((r) => [r.key, r.value])));
+});
+
+// EXPORT everything as a portable JSON backup (download).
+const BACKUP_VERSION = 1;
+app.get("/api/export", (_req, res) => {
+  const settings = Object.fromEntries(
+    db.prepare("SELECT key, value FROM settings").all().map((r) => [r.key, r.value])
+  );
+  const seeds = db.prepare("SELECT * FROM seeds ORDER BY id").all()
+    .map(({ id, created_at, ...seed }) => seed);
+  const now = new Date();
+  const stamp = [now.getFullYear(), now.getMonth() + 1, now.getDate()].map((n) => String(n).padStart(2, "0")).join("-");
+  res.setHeader("Content-Disposition", `attachment; filename="seed-ledger-${stamp}.json"`);
+  res.json({ app: "seed-ledger", version: BACKUP_VERSION, exported_at: new Date().toISOString(), settings, seeds });
+});
+
+// IMPORT a backup: replaces all seeds and settings in one transaction.
+app.post("/api/import", (req, res) => {
+  const { app: appName, version, settings = {}, seeds } = req.body || {};
+  if (appName !== "seed-ledger" || !Array.isArray(seeds)) {
+    return res.status(400).json({ error: "That file isn't a Seed Ledger backup." });
+  }
+  if (version > BACKUP_VERSION) {
+    return res.status(400).json({ error: "This backup is from a newer version of Seed Ledger. Update the app first." });
+  }
+  const rows = seeds.map(pick).filter((s) => s.name);
+  db.transaction(() => {
+    db.prepare("DELETE FROM seeds").run();
+    db.prepare("DELETE FROM settings").run();
+    db.prepare("DELETE FROM sqlite_sequence WHERE name = 'seeds'").run();
+    const setStmt = db.prepare("INSERT INTO settings (key, value) VALUES (?, ?)");
+    for (const key of SETTING_KEYS) {
+      if (key === "onboarded") continue; // always set below
+      if (settings[key] != null && settings[key] !== "") setStmt.run(key, String(settings[key]));
+    }
+    setStmt.run("onboarded", "1"); // an imported garden is set up
+    for (const row of rows) {
+      const cols = Object.keys(row);
+      db.prepare(`INSERT INTO seeds (${cols.join(", ")}) VALUES (${cols.map((c) => "@" + c).join(", ")})`).run(row);
+    }
+  })();
+  res.json({ seeds: rows.length });
 });
 
 // RESET everything: all seeds and settings, back to a fresh install.

@@ -3,6 +3,7 @@ import { searchPlaces, estimateClimate, placeLabel } from "../lib/climate";
 import { formatMonthDay } from "../lib/garden";
 import { X, MapPin } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
+import ImportButton from "./ImportButton";
 
 const mmddToDate = (v) => (v ? new Date(2001, Number(v.slice(0, 2)) - 1, Number(v.slice(3))) : null);
 
@@ -160,6 +161,13 @@ export default function SetupModal(props) {
               <button class="btn btn--ghost" onClick={() => { setStep("search"); setNotice(""); }}>Back</button>
             }>
               <button class="btn btn--ghost" onClick={() => setStep("manual")}>Enter dates manually</button>
+              {/* Moving from another install? Bring the whole garden over. */}
+              <Show when={props.firstRun}>
+                <ImportButton class="btn btn--ghost" hasData={props.seedCount > 0} seedCount={props.seedCount}
+                  onImport={props.onImport} onError={props.onError}>
+                  Import a backup
+                </ImportButton>
+              </Show>
             </Show>
           </div>
           <div class="modal__foot-right">

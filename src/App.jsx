@@ -65,6 +65,19 @@ export default function App() {
     setLookupOpen(false);
   }
 
+  // Replace everything with an uploaded backup.
+  async function importData(data) {
+    try {
+      const { seeds: count } = await api.importData(data);
+      setModal(null);
+      setLookupOpen(false);
+      await Promise.all([refetch(), refetchSettings()]);
+      pushToast(`Imported ${count} ${count === 1 ? "seed" : "seeds"}`);
+    } catch (err) {
+      pushToast(err.message || "Import failed.");
+    }
+  }
+
   // Wipe all seeds + settings; the app returns to its first-run state.
   async function resetAll() {
     await api.reset();
@@ -111,7 +124,8 @@ export default function App() {
             </Show>
             <Show when={view() === "settings"}>
               <Settings settings={cfg()} onSave={saveSettings} seedCount={list().length}
-                onLookup={() => setLookupOpen(true)} onReset={resetAll} />
+                onLookup={() => setLookupOpen(true)} onReset={resetAll}
+                onImport={importData} onError={(m) => pushToast(m)} />
             </Show>
           </Show>
         </main>
@@ -124,7 +138,8 @@ export default function App() {
       <Toasts toasts={toasts()} onDismiss={dismissToast} />
 
       <Show when={firstRun() || lookupOpen()}>
-        <SetupModal settings={cfg()} firstRun={firstRun()} onSave={saveSetup} onClose={() => setLookupOpen(false)} />
+        <SetupModal settings={cfg()} firstRun={firstRun()} onSave={saveSetup} onClose={() => setLookupOpen(false)}
+          seedCount={list().length} onImport={importData} onError={(m) => pushToast(m)} />
       </Show>
 
       <Show when={modal()}>

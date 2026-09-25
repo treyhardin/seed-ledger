@@ -104,7 +104,13 @@ Everything is stored in one SQLite file, `garden.db`, inside the container at `/
 Portainer and Dockhand prefix the volume name with the stack name
 (e.g. `seed-ledger_seed-ledger-data`). That's expected, and it survives updates.
 
-**Back up** from the Docker host (the container is always named `seed-ledger`). Stop it
+**Download or import from the app:** **Settings → Backup & transfer** has **Download data**,
+which saves every seed and setting as a `.json` file, and **Import data**, which replaces
+everything with a downloaded file (it asks before overwriting). A fresh install also offers
+**Import a backup** in its setup window. This is the easiest way to move your garden to
+another install or host.
+
+**Back up the database file** from the Docker host (the container is always named `seed-ledger`). Stop it
 first so the copy is consistent:
 
 ```bash
@@ -113,7 +119,7 @@ docker cp seed-ledger:/data/garden.db ./garden-backup.db
 docker start seed-ledger
 ```
 
-**Restore** a backup (or move data from another install):
+**Restore** a database file (or move one from another install):
 
 ```bash
 docker stop seed-ledger

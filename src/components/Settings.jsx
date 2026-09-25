@@ -1,7 +1,8 @@
 import { createSignal, Show } from "solid-js";
-import { Snowflake, MapPin, Trash } from "../lib/icons";
+import { Snowflake, MapPin, Trash, DownloadSimple, UploadSimple } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
 import ConfirmModal from "./ConfirmModal";
+import ImportButton from "./ImportButton";
 
 export default function Settings(props) {
   const s = () => props.settings || {};
@@ -41,6 +42,20 @@ export default function Settings(props) {
 
         {FrostField({ key: "last_frost", title: "Average last spring frost", help: "The last freeze before the growing season — the \"after last frost\" anchor." })}
         {FrostField({ key: "first_frost", title: "Average first fall frost", help: "The first freeze that ends the season — the \"before first frost\" anchor." })}
+      </section>
+
+      <section class="settings-panel">
+        <div class="settings-panel__head">
+          <h2>Backup &amp; transfer</h2>
+          <p>Download all your seeds and settings as a file, or import one to move your garden to another install.</p>
+        </div>
+        <div class="settings-actions">
+          <a class="btn" href="/api/export" download><DownloadSimple size={16} /> Download data</a>
+          <ImportButton hasData={props.seedCount > 0 || !!s().last_frost} seedCount={props.seedCount}
+            onImport={props.onImport} onError={props.onError}>
+            <UploadSimple size={16} /> Import data
+          </ImportButton>
+        </div>
       </section>
 
       <section class="settings-panel settings-panel--danger">

@@ -930,6 +930,9 @@ textarea.field__input { resize: vertical; }
 .settings-location__text { flex: 1 1 auto; display: flex; flex-direction: column; color: var(--ink); font-weight: 600; font-size: 0.95rem; }
 .settings-location__zone { font-family: var(--mono); font-size: 0.74rem; font-weight: 400; color: var(--blue); }
 
+.settings-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+a.btn { text-decoration: none; }
+
 .settings-panel--danger { border-color: var(--berry); }
 .settings-panel--danger h2 { color: var(--berry); }
 .modal--confirm { width: min(440px, 100%); border-color: var(--berry); }
