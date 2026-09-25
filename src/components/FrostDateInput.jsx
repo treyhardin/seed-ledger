@@ -1,5 +1,8 @@
-import { createSignal, createEffect, For } from "solid-js";
+import { createSignal, createEffect } from "solid-js";
 import { MONTHS } from "../lib/garden";
+import Select from "./Select";
+
+const MONTH_OPTIONS = MONTHS.map((label, i) => ({ value: i + 1, label }));
 
 const pad = (n) => String(n).padStart(2, "0");
 const DAYS_IN = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -28,14 +31,11 @@ export default function FrostDateInput(props) {
 
   return (
     <div class="frost-date">
-      <label class="field">
-        <span class="field__label">Month</span>
-        <select class="field__input" value={m() || ""} aria-label={`${props.label} month`}
-          onChange={(e) => commit(Number(e.currentTarget.value), d())}>
-          <option value="">—</option>
-          <For each={MONTHS}>{(name, i) => <option value={i() + 1}>{name}</option>}</For>
-        </select>
-      </label>
+      <div class="field">
+        <span class="field__label" aria-hidden="true">Month</span>
+        <Select class="frost-date__month" value={m() || null} options={MONTH_OPTIONS}
+          label={`${props.label} month`} placeholder="—" onChange={(v) => commit(v, d())} />
+      </div>
       <label class="field">
         <span class="field__label">Day</span>
         <input class="field__input" type="number" min="1" max="31" placeholder="—"

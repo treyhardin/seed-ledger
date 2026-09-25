@@ -105,6 +105,16 @@ export function toastOut(el) {
 
 // --- Small interactions ---
 
+// A dropdown list opening from its trigger (or up, when it flipped above).
+export function popIn(el, above = false) {
+  if (reduced() || !el) return;
+  gsap.from(el, {
+    opacity: 0, y: above ? 6 : -6, scale: 0.98,
+    transformOrigin: above ? "bottom center" : "top center",
+    duration: 0.28, ease: "power3.out",
+  });
+}
+
 // The settings gear turns a quarter each time it's toggled.
 export function spin(el) {
   if (reduced() || !el) return;

@@ -576,7 +576,10 @@ button { font-family: inherit; cursor: pointer; }
 .field__input:hover { border-color: var(--color-ink-3); }
 .field__input:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 3px var(--color-line); }
 textarea.field__input { resize: vertical; line-height: 1.45; }
-select.field__input { cursor: pointer; }
+/* Number fields: no native spinner arrows (type or use the arrow keys) */
+.field__input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.field__input[type="number"]::-webkit-inner-spin-button,
+.field__input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
 .toggle-group {
   display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px;
@@ -593,13 +596,47 @@ select.field__input { cursor: pointer; }
 .toggle-opt:hover { color: var(--color-ink); }
 .toggle-opt--on { background: var(--color-bg); color: var(--color-ink); box-shadow: var(--shadow-raised), 0 0 0 1px var(--color-line); }
 
+/* ---------- Select (custom dropdown) ---------- */
+.select {
+  display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+  min-height: 40px; min-width: 104px; padding: 0 var(--space-2) 0 var(--space-3);
+  border: 1px solid var(--color-line-strong); border-radius: var(--radius-sm);
+  background: var(--color-bg); color: var(--color-ink);
+  font-family: inherit; font-size: var(--font-size-md); text-align: left;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+}
+.select:hover { border-color: var(--color-ink-3); }
+.select:focus-visible, .select--open { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 3px var(--color-line); }
+.select--empty .select__value { color: var(--color-ink-3); }
+.select__value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.select__caret { display: inline-flex; color: var(--color-ink-3); transition: transform var(--dur-base) var(--ease-out); }
+.select--open .select__caret { transform: rotate(180deg); }
+.select--grow { flex: 1 1 auto; }
+
+.select__list {
+  position: fixed; z-index: 60;
+  max-height: 288px; overflow-y: auto; overscroll-behavior: contain;
+  margin: 0; padding: var(--space-1); list-style: none;
+  border: 1px solid var(--color-line); border-radius: var(--radius-md);
+  background: var(--color-bg); box-shadow: var(--shadow-float);
+}
+.select__option {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+  min-height: 36px; padding: 0 var(--space-3);
+  border-radius: var(--radius-xs);
+  font-size: var(--font-size-md); color: var(--color-ink); cursor: pointer;
+  white-space: nowrap;
+}
+.select__option--active { background: var(--color-surface); }
+.select__option[aria-selected="true"] { font-weight: 600; }
+.select__option svg { color: var(--color-ink); flex: none; }
+
 .minmax { display: flex; align-items: center; gap: var(--space-2); }
 .minmax span { color: var(--color-ink-3); }
 .timing-row { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .timing-row .field__input { width: auto; }
 .timing-weeks { width: 64px !important; text-align: center; }
 .timing-unit { font-size: var(--font-size-sm); color: var(--color-ink-2); }
-.timing-row select.field__input { flex: 1 1 auto; min-width: 110px; }
 
 .add-link {
   justify-self: start; display: inline-flex; align-items: center; gap: 6px;
@@ -640,7 +677,6 @@ select.field__input { cursor: pointer; }
 .frost-field__label p { margin-top: 2px; font-size: var(--font-size-sm); color: var(--color-ink-2); max-width: 36ch; }
 .frost-date { display: flex; gap: var(--space-2); flex: none; }
 .frost-date .field { width: auto; }
-.frost-date select.field__input { min-width: 100px; }
 .frost-date input.field__input { width: 76px; }
 
 /* ---------- First-run setup / location lookup ---------- */

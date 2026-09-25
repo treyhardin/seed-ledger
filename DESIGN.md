@@ -312,6 +312,17 @@ All motion is **GSAP**, defined in one module: `src/lib/motion.js`. Content is v
 ### Icons
 Phosphor, regular weight only, inlined from the official SVGs in `src/lib/icons.jsx` (`currentColor`, no dependency). The brand mark is the Phosphor plant in a 32px ink square.
 
+
+### Select (custom dropdown)
+`src/components/Select.jsx` is used for every choice list: months, before/after, last/first frost. There are no native `<select>`s.
+- **Trigger:** matches `.field__input` in height, border, radius and ink focus ring. The value is left-aligned with a caret that rotates when open, and the placeholder is `ink-3`.
+- **List:** a `bg` panel with a `line` border, `radius-md` corners and `shadow-float`, max 288px tall with its own scroll. Options are 36px rows: the active row gets a `surface` fill, and the selected row is 600 weight with a Phosphor check.
+- **Behavior:** it's an ARIA select-only combobox. Focus stays on the trigger and the active option is announced through `aria-activedescendant`.
+  - **Keys:** ↑↓, Home/End, Enter/Space, Escape and Tab.
+  - **Type-ahead:** works open or closed.
+  - **Closing:** outside click, scrolling, or resizing closes it.
+- **Placement:** the list renders in a portal with fixed positioning, so dialogs never clip it. It flips above the trigger when there's no room below. It opens with GSAP `popIn` (top-anchored, or bottom-anchored when flipped).
+- **Number inputs** hide native spinner arrows so the fields sit cleanly beside a Select.
 ## Do's and Don'ts
 
 ### Do:

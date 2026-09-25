@@ -3,6 +3,7 @@ import { createSignal, For, Show } from "solid-js";
 import { SUN, SUN_ORDER, ANCHORS, DIRECTIONS, START_METHOD } from "../lib/garden";
 import { Plus, X } from "../lib/icons";
 import { appear } from "../lib/motion";
+import Select from "./Select";
 
 // Fields with a fixed default (selects/toggles) vs. free inputs that start blank.
 const DEFAULTS = {
@@ -37,6 +38,9 @@ const NUMERIC = [
   "days_to_germ", "days_to_germ_max", "soil_temp_min", "soil_temp_max",
   "plant_weeks", "plant_weeks_max", "plant2_weeks", "plant2_weeks_max", "harvest_weeks",
 ];
+
+const DIRECTION_OPTIONS = Object.entries(DIRECTIONS).map(([value, label]) => ({ value, label }));
+const ANCHOR_OPTIONS = Object.entries(ANCHORS).map(([value, label]) => ({ value, label }));
 
 export default function SeedFields(props) {
   const [form, setForm] = createStore(toForm(props.seed));
@@ -81,12 +85,10 @@ export default function SeedFields(props) {
       <input class="field__input timing-weeks" type="number" min="0" placeholder="—"
         aria-label="To (weeks, optional)" value={form[hiKey]} onInput={set(hiKey)} />
       <span class="timing-unit">weeks</span>
-      <select class="field__input" value={form[dirKey]} onChange={set(dirKey)}>
-        <For each={Object.entries(DIRECTIONS)}>{([v, l]) => <option value={v}>{l}</option>}</For>
-      </select>
-      <select class="field__input" value={form[anchorKey]} onChange={set(anchorKey)}>
-        <For each={Object.entries(ANCHORS)}>{([v, l]) => <option value={v}>{l}</option>}</For>
-      </select>
+      <Select value={form[dirKey]} options={DIRECTION_OPTIONS} label="Before or after"
+        onChange={(v) => setForm(dirKey, v)} />
+      <Select class="select--grow" value={form[anchorKey]} options={ANCHOR_OPTIONS} label="Frost date"
+        onChange={(v) => setForm(anchorKey, v)} />
     </div>
   );
 
@@ -95,12 +97,10 @@ export default function SeedFields(props) {
       <input class="field__input timing-weeks" type="number" min="0" placeholder="0"
         value={form[weeksKey]} onInput={set(weeksKey)} />
       <span class="timing-unit">weeks</span>
-      <select class="field__input" value={form[dirKey]} onChange={set(dirKey)}>
-        <For each={Object.entries(DIRECTIONS)}>{([v, l]) => <option value={v}>{l}</option>}</For>
-      </select>
-      <select class="field__input" value={form[anchorKey]} onChange={set(anchorKey)}>
-        <For each={Object.entries(ANCHORS)}>{([v, l]) => <option value={v}>{l}</option>}</For>
-      </select>
+      <Select value={form[dirKey]} options={DIRECTION_OPTIONS} label="Before or after"
+        onChange={(v) => setForm(dirKey, v)} />
+      <Select class="select--grow" value={form[anchorKey]} options={ANCHOR_OPTIONS} label="Frost date"
+        onChange={(v) => setForm(anchorKey, v)} />
     </div>
   );
 
