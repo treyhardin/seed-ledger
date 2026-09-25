@@ -1,6 +1,7 @@
 import { createSignal, Show } from "solid-js";
 import { todayISO } from "../lib/garden";
 import { Basket, X } from "../lib/icons";
+import { appear } from "../lib/motion";
 
 // "Mark harvested" that first asks for the harvest date (defaults to today).
 export default function HarvestButton(props) {
@@ -24,7 +25,7 @@ export default function HarvestButton(props) {
         <Basket size={16} /> Mark harvested
       </button>
     }>
-      <form class="date-prompt" onSubmit={confirm}>
+      <form class="date-prompt" ref={appear()} onSubmit={confirm}>
         <label class="date-prompt__field">
           <span class="date-prompt__label">Harvested</span>
           <input class="field__input date-prompt__input" type="date" required

@@ -1,12 +1,15 @@
-import { createSignal, Show } from "solid-js";
+import { createSignal, Show, onMount } from "solid-js";
 import { Snowflake, MapPin, Trash, DownloadSimple, UploadSimple } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
 import ConfirmModal from "./ConfirmModal";
 import ImportButton from "./ImportButton";
+import { revealView } from "../lib/motion";
 
 export default function Settings(props) {
   const s = () => props.settings || {};
   const [confirming, setConfirming] = createSignal(false);
+  let root;
+  onMount(() => revealView(root, ".settings-panel"));
 
   const FrostField = (fp) => (
     <div class="frost-field">
@@ -22,7 +25,7 @@ export default function Settings(props) {
   );
 
   return (
-    <div class="view">
+    <div class="view" ref={root}>
       <section class="settings-panel">
         <div class="settings-panel__head">
           <h2>Frost dates</h2>

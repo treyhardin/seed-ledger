@@ -6,6 +6,7 @@ import {
 import { X, Shovel, Basket, Trash } from "../lib/icons";
 import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
+import { dialogIn } from "../lib/motion";
 import Progress from "./Progress";
 import HarvestButton from "./HarvestButton";
 
@@ -85,15 +86,17 @@ export default function SeedModal(props) {
     else setMode("view");
   }
 
+  // Close first (animated), then delete, so the dialog doesn't blank out.
   async function handleDelete() {
-    const removed = await props.onDelete(seed());
-    if (removed) props.onClose();
+    const s = seed();
+    await props.onClose();
+    props.onDelete(s);
   }
 
   const title = () => (isNew() ? "Add seed" : mode() === "edit" ? `Edit ${seed().name}` : seed().name);
 
   return (
-    <div class="scrim" onPointerDown={onScrimDown} onClick={onScrimClick}>
+    <div class="scrim" ref={dialogIn} onPointerDown={onScrimDown} onClick={onScrimClick}>
       <div class="modal" role="dialog" aria-modal="true">
         <Show when={isNew() || seed()}>
         <header class="modal__head">

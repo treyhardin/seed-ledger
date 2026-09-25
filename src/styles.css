@@ -63,13 +63,15 @@
   --gutter: clamp(16px, 4vw, 48px);
   --maxw: 1200px;
   --label-col: 168px;               /* shared by "now" keys and almanac names */
+  /* Right edge of the content column, for fixed UI (FAB, toasts). In a fixed
+     box, % is the viewport width without the scrollbar. */
+  --edge-right: max(var(--gutter), calc((100% - var(--maxw)) / 2 + var(--gutter)));
 
   /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* expo-ish */
   --dur-fast: 140ms;
   --dur-base: 240ms;
   --dur-slow: 700ms;
-  --dur-modal: 360ms;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -125,11 +127,16 @@ button { font-family: inherit; cursor: pointer; }
 
 .topbar {
   position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
-  padding: var(--space-3) var(--gutter);
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-line);
 }
+/* Same max-width and inline margin as .content, so header and page align */
+.topbar__inner {
+  max-width: var(--maxw); margin: 0 auto;
+  padding: var(--space-3) var(--gutter);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+}
+.topbar__gear { display: inline-flex; }
 .brand {
   display: flex; align-items: center; gap: var(--space-3);
   padding: 0; border: none; background: none; color: var(--color-ink);
@@ -183,7 +190,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /* Floating "Add seed" */
 .fab {
-  position: fixed; right: var(--gutter); bottom: var(--space-5); z-index: 30;
+  position: fixed; right: var(--edge-right); bottom: var(--space-5); z-index: 30;
   display: inline-flex; align-items: center; gap: var(--space-2);
   height: 48px; padding: 0 var(--space-5) 0 var(--space-4);
   border: none; border-radius: var(--radius-pill);
@@ -214,7 +221,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ---------- Toasts ---------- */
 .toasts {
-  position: fixed; top: 64px; right: var(--gutter); z-index: 50;
+  position: fixed; top: 64px; right: var(--edge-right); z-index: 50;
   display: flex; flex-direction: column; gap: var(--space-2);
   width: min(360px, calc(100vw - 32px));
   pointer-events: none;
@@ -226,7 +233,6 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: var(--radius-md);
   background: var(--color-ink); color: var(--color-on-ink);
   box-shadow: var(--shadow-float);
-  animation: toast-in var(--dur-base) var(--ease-out);
 }
 .toast__msg { flex: 1; font-size: var(--font-size-sm); line-height: 1.35; }
 .toast__undo {
@@ -242,7 +248,6 @@ button { font-family: inherit; cursor: pointer; }
   background: none; color: var(--color-on-ink); opacity: 0.6;
 }
 .toast__x:hover { opacity: 1; background: var(--color-on-ink-hover); }
-@keyframes toast-in { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
 
 /* ============================================================
    NOW — the first viewport, set as type
@@ -254,7 +259,7 @@ button { font-family: inherit; cursor: pointer; }
   padding: var(--space-4) 0;
   border-top: 1px solid var(--color-line);
 }
-.now__row:first-child { border-top-color: var(--color-ink); }
+.now__row:first-child { border-top: none; padding-top: 0; }
 .now__row:last-child { border-bottom: 1px solid var(--color-line); }
 .now__key { padding-right: var(--space-4); font-size: var(--font-size-sm); font-weight: 500; color: var(--color-ink-2); }
 .now__row--live .now__key { color: var(--color-accent-ink); }
@@ -393,17 +398,11 @@ button { font-family: inherit; cursor: pointer; }
 .run {
   position: absolute; top: 50%; height: 2px; margin-top: -1px;
   background: var(--color-ink-3);
-  transform-origin: left center;
-  animation: grow var(--dur-slow) var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 28ms + 180ms);
 }
 .sowband {
   position: absolute; top: 50%; z-index: 1;
   height: 10px; margin-top: -5px; min-width: 10px;
   border-radius: var(--radius-pill); background: var(--color-ink-2);
-  transform-origin: left center;
-  animation: grow var(--dur-slow) var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 28ms);
 }
 /* A single-week sow window is a square, never confusable with the round harvest dot */
 .sowband--point { width: 10px !important; margin-left: -5px; border-radius: var(--radius-mark); }
@@ -413,11 +412,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 10px; height: 10px; margin: -5px 0 0 -5px;
   border-radius: 50%; background: var(--color-ink);
   box-shadow: 0 0 0 2px var(--color-bg);
-  animation: pop-in var(--dur-base) var(--ease-out) both;
-  animation-delay: calc(var(--i, 0) * 28ms + 420ms);
 }
-@keyframes grow { from { transform: scaleX(0); } }
-@keyframes pop-in { from { transform: scale(0); } }
 
 .almanac__empty { color: var(--color-ink-2); padding: var(--space-4) 0; }
 
@@ -467,12 +462,11 @@ button { font-family: inherit; cursor: pointer; }
 .progress__bar { height: 4px; border-radius: var(--radius-pill); background: var(--color-line-strong); overflow: hidden; }
 .progress__bar i {
   display: block; height: 100%; border-radius: var(--radius-pill); background: var(--color-accent);
-  transform-origin: left center; animation: grow var(--dur-slow) var(--ease-out) both;
 }
 .progress__eta { font-size: var(--font-size-sm); color: var(--color-ink-3); }
 
 /* Inline harvest-date prompt */
-.date-prompt { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; animation: fade-up var(--dur-base) var(--ease-out); }
+.date-prompt { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .date-prompt__field { display: flex; align-items: center; gap: var(--space-2); }
 .date-prompt__label { font-size: var(--font-size-sm); font-weight: 500; color: var(--color-ink-2); }
 .date-prompt__input { width: auto; }
@@ -517,7 +511,6 @@ button { font-family: inherit; cursor: pointer; }
   display: flex; align-items: center; justify-content: center;
   padding: var(--space-5);
   background: var(--color-scrim);
-  animation: fade var(--dur-base) ease;
 }
 .modal {
   width: min(600px, 100%); max-height: min(90vh, 820px);
@@ -525,7 +518,6 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: var(--radius-lg);
   background: var(--color-bg);
   box-shadow: var(--shadow-modal);
-  animation: modal-in var(--dur-modal) var(--ease-out);
 }
 .modal__head {
   display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3);
@@ -548,8 +540,6 @@ button { font-family: inherit; cursor: pointer; }
 .modal--confirm { width: min(440px, 100%); }
 .confirm__message { color: var(--color-ink-2); line-height: 1.5; }
 @keyframes fade { from { opacity: 0; } }
-@keyframes modal-in { from { opacity: 0; transform: translateY(12px) scale(0.98); filter: blur(2px); } }
-@keyframes fade-up { from { opacity: 0; transform: translateY(4px); } }
 
 /* Seed detail */
 .detail { display: flex; flex-direction: column; gap: var(--space-5); }
@@ -625,7 +615,7 @@ select.field__input { cursor: pointer; }
   display: flex; flex-direction: column; gap: var(--space-2);
   padding: var(--space-3) var(--space-4); border-radius: var(--radius-md);
   background: var(--color-surface);
-  animation: fade-up var(--dur-base) var(--ease-out);
+ 
 }
 .second-sow__head { display: flex; align-items: center; justify-content: space-between; }
 
@@ -633,8 +623,8 @@ select.field__input { cursor: pointer; }
 .settings-panel {
   max-width: 720px; width: 100%;
   display: flex; flex-direction: column; gap: var(--space-5);
-  padding-top: var(--space-5); border-top: 1px solid var(--color-ink);
 }
+.settings-panel + .settings-panel { padding-top: var(--space-6); border-top: 1px solid var(--color-line); }
 .settings-panel__head h2 { font-size: var(--font-size-xl); }
 .settings-panel__head p { margin-top: var(--space-1); color: var(--color-ink-2); max-width: 56ch; }
 .settings-panel--danger h2 { color: var(--color-danger); }
@@ -669,7 +659,7 @@ select.field__input { cursor: pointer; }
 .setup-or::before, .setup-or::after { content: ""; flex: 1; border-top: 1px solid var(--color-line); }
 .setup-search { display: flex; gap: var(--space-2); }
 .setup-search .field__input { flex: 1 1 auto; min-width: 0; }
-.place-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; animation: fade-up var(--dur-base) var(--ease-out); }
+.place-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
 .place-list li + li { border-top: 1px solid var(--color-line); }
 .place-opt {
   display: flex; align-items: baseline; gap: var(--space-2); width: 100%;
@@ -681,7 +671,7 @@ select.field__input { cursor: pointer; }
 .place-opt:hover { background: var(--color-surface); }
 .place-opt__name { font-weight: 600; }
 .place-opt__region { font-size: var(--font-size-sm); color: var(--color-ink-3); }
-.setup-result { display: flex; flex-direction: column; gap: var(--space-3); animation: fade-up var(--dur-base) var(--ease-out); }
+.setup-result { display: flex; flex-direction: column; gap: var(--space-3); }
 .setup-result__place { display: flex; align-items: center; gap: 6px; font-weight: 600; }
 .setup-result__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin: 0; }
 .setup-result__grid div { padding-top: var(--space-2); border-top: 1px solid var(--color-ink); }
@@ -693,12 +683,6 @@ select.field__input { cursor: pointer; }
 .setup-zone { max-width: 160px; }
 .setup-credit { font-size: var(--font-size-xs); color: var(--color-ink-3); }
 .setup-foot-left { display: flex; gap: var(--space-1); flex-wrap: wrap; }
-
-/* ---------- View transitions (view switches, closing dialogs) ---------- */
-::view-transition-old(root), ::view-transition-new(root) {
-  animation-duration: var(--dur-base);
-  animation-timing-function: var(--ease-out);
-}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
@@ -712,11 +696,10 @@ select.field__input { cursor: pointer; }
   .detail__grid, .group { grid-template-columns: 1fr; }
   .setup-result__grid { grid-template-columns: 1fr 1fr; }
   .scrim { align-items: flex-end; padding: 0; }
-  .modal { width: 100%; max-height: 92vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; animation-name: sheet-in; }
+  .modal { width: 100%; max-height: 92vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
   .fab { bottom: var(--space-4); }
   .toasts { top: 60px; }
 }
-@keyframes sheet-in { from { transform: translateY(40px); opacity: 0; } }
 
 @media (max-width: 420px) {
   .brand__name { font-size: var(--font-size-md); }

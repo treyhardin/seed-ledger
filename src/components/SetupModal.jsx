@@ -4,6 +4,7 @@ import { formatMonthDay } from "../lib/garden";
 import { X, MapPin, Crosshair } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
 import ImportButton from "./ImportButton";
+import { dialogIn, appear, appearChildren } from "../lib/motion";
 
 const mmddToDate = (v) => (v ? new Date(2001, Number(v.slice(0, 2)) - 1, Number(v.slice(3))) : null);
 
@@ -85,7 +86,7 @@ export default function SetupModal(props) {
   );
 
   return (
-    <div class="scrim">
+    <div class="scrim" ref={dialogIn}>
       <div class="modal modal--setup" role="dialog" aria-modal="true" aria-labelledby="setup-title">
         <header class="modal__head">
           <div>
@@ -123,7 +124,7 @@ export default function SetupModal(props) {
               <Show when={busy()}><p class="setup__status">{busy()}</p></Show>
               <Show when={!busy() && places()}>
                 <Show when={places().length} fallback={<p class="setup__status">No places found. Try a nearby larger town.</p>}>
-                  <ul class="place-list">
+                  <ul class="place-list" ref={appearChildren()}>
                     <For each={places()}>
                       {(p) => (
                         <li>
@@ -141,7 +142,7 @@ export default function SetupModal(props) {
             </Match>
 
             <Match when={step() === "result"}>
-              <div class="setup-result">
+              <div class="setup-result" ref={appear()}>
                 <p class="setup-result__place"><MapPin size={16} /> {draft().location}</p>
                 <dl class="setup-result__grid">
                   <div><dt>Hardiness zone</dt><dd>{draft().zone || "—"}</dd></div>
@@ -157,7 +158,7 @@ export default function SetupModal(props) {
             </Match>
 
             <Match when={step() === "manual"}>
-              <Show when={notice()}><p class="setup__notice">{notice()}</p></Show>
+              <Show when={notice()}><p class="setup__notice" ref={appear()}>{notice()}</p></Show>
               <p class="setup__intro">
                 Enter your average last spring and first fall frost dates. A local extension office
                 or gardening almanac will have them.

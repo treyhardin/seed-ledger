@@ -1,5 +1,6 @@
 import { Show } from "solid-js";
 import { expectedHarvest, daysSince, formatDate } from "../lib/garden";
+import { fill } from "../lib/motion";
 
 // Days in the ground, measured against days to maturity when known.
 export default function Progress(props) {
@@ -16,7 +17,7 @@ export default function Progress(props) {
       <Show when={total()}>
         <div class="progress__bar" role="progressbar" aria-valuemin="0" aria-valuemax={total()}
           aria-valuenow={Math.min(days(), total())} aria-label="Growing progress">
-          <i style={{ width: `${pct()}%` }} />
+          <i ref={fill()} style={{ width: `${pct()}%` }} />
         </div>
       </Show>
       <p class="progress__eta">

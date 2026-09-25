@@ -7,14 +7,7 @@ import SeedModal from "./components/SeedModal";
 import SetupModal from "./components/SetupModal";
 import Toasts from "./components/Toasts";
 import { Plus, Plant, Gear } from "./lib/icons";
-
-// Cross-fade a DOM change with the View Transitions API where supported
-// (view switches, closing dialogs). Falls back to an instant update.
-function withTransition(update) {
-  const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-  if (!document.startViewTransition || reduce) return update();
-  document.startViewTransition(update);
-}
+import { closeDialog, spin } from "./lib/motion";
 
 export default function App() {
   const [seeds, { refetch, mutate }] = createResource(api.list);
@@ -36,7 +29,8 @@ export default function App() {
   function openNew() { setModal({ id: null, mode: "edit" }); }
   function openSeed(seed) { setModal({ id: seed.id, mode: "view" }); }
   function editSeed(seed) { setModal({ id: seed.id, mode: "edit" }); }
-  function closeModal() { withTransition(() => setModal(null)); }
+  // Dialogs animate out before they unmount.
+  function closeModal() { return closeDialog(() => setModal(null)); }
 
   async function save(data) {
     const m = modal();
@@ -66,18 +60,20 @@ export default function App() {
 
   // First run: settings loaded but setup never completed or skipped.
   const firstRun = () => !settings.loading && settings() && !settings().onboarded;
-  async function saveSetup(patch) {
-    await saveSettings(patch);
-    withTransition(() => setLookupOpen(false));
+  function saveSetup(patch) {
+    return closeDialog(async () => {
+      setLookupOpen(false);
+      await saveSettings(patch);
+    });
   }
-  const go = (next) => withTransition(() => setView(next));
+  const go = (next) => { setView(next); window.scrollTo({ top: 0 }); };
+  let gearIcon;
 
   // Replace everything with an uploaded backup.
   async function importData(data) {
     try {
       const { seeds: count } = await api.importData(data);
-      setModal(null);
-      setLookupOpen(false);
+      await closeDialog(() => { setModal(null); setLookupOpen(false); });
       await Promise.all([refetch(), refetchSettings()]);
       pushToast(`Imported ${count} ${count === 1 ? "seed" : "seeds"}`);
     } catch (err) {
@@ -97,8 +93,7 @@ export default function App() {
   function dismissToast(id) { setToasts((t) => t.filter((x) => x.id !== id)); }
   function pushToast(message, undo) {
     const id = ++toastSeq;
-    setToasts((t) => [...t, { id, message, undo }]);
-    setTimeout(() => dismissToast(id), 6000);
+    setToasts((t) => [...t, { id, message, undo }]); // each toast times itself out
   }
 
   function markPlanted(seed) {
@@ -118,6 +113,7 @@ export default function App() {
   return (
     <div class="layout">
       <header class="topbar">
+        <div class="topbar__inner">
         <button class="brand" onClick={() => go("home")} aria-label="Seed Ledger home">
           <span class="mark"><Plant size={19} /></span>
           <span class="brand__name">Seed Ledger</span>
@@ -128,10 +124,11 @@ export default function App() {
           data-tip={view() === "settings" ? "Close settings" : "Settings"}
           aria-label="Settings"
           aria-pressed={view() === "settings"}
-          onClick={() => go(view() === "settings" ? "home" : "settings")}
+          onClick={() => { spin(gearIcon); go(view() === "settings" ? "home" : "settings"); }}
         >
-          <Gear size={20} />
+          <span class="topbar__gear" ref={gearIcon}><Gear size={20} /></span>
         </button>
+        </div>
       </header>
 
       <div class="main">
@@ -157,7 +154,7 @@ export default function App() {
       <Toasts toasts={toasts()} onDismiss={dismissToast} />
 
       <Show when={firstRun() || lookupOpen()}>
-        <SetupModal settings={cfg()} firstRun={firstRun()} onSave={saveSetup} onClose={() => withTransition(() => setLookupOpen(false))}
+        <SetupModal settings={cfg()} firstRun={firstRun()} onSave={saveSetup} onClose={() => closeDialog(() => setLookupOpen(false))}
           seedCount={list().length} onImport={importData} onError={(m) => pushToast(m)} />
       </Show>
 

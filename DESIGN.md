@@ -166,7 +166,7 @@ Home opens as a few lines of large type (Sow now / Next / Frost) keyed in a narr
 - One typeface (Schibsted Grotesk), tabular figures wherever numbers are data.
 - A shared label column aligns the Now block and The Almanac.
 - Surfaces separate by fill, never by border; the modal is the only elevated surface.
-- One authored motion: Almanac marks draw in left to right, row by row.
+- Smooth GSAP motion: an orchestrated Home load-in (Almanac marks draw in row by row), animated dialogs and toasts.
 
 ## Colors
 
@@ -220,7 +220,7 @@ Achromatic by default; a single green carries the present tense. Tokens live on 
 
 ## Layout
 
-A centered column, max 1200px, with a fluid gutter (`clamp(16px, 4vw, 48px)`). Spacing is an 8pt scale (`--space-1`…`--space-8`); home sections sit `--space-7` apart (`--space-6` on mobile).
+A centered column, max 1200px, with a fluid gutter (`clamp(16px, 4vw, 48px)`). **The header shares that column** (`.topbar__inner` uses the same max-width and gutter as `.content`), so the logo and the page content start on one left edge and the gear ends on the same right edge. Fixed UI (the Add seed button, toasts) follows that right edge through `--edge-right`. Nothing puts a heavy rule above the page content. Spacing is an 8pt scale (`--space-1`…`--space-8`); home sections sit `--space-7` apart (`--space-6` on mobile).
 
 - **Top bar:** sticky, white, hairline bottom; brand mark and name left, icon-only Settings right. No sidebar.
 - **The label column:** `--label-col` is 168px on desktop and 96px at ≤720px. The Now keys and The Almanac's seed names both use it, so the two blocks share one left edge for their content.
@@ -281,15 +281,27 @@ A rolling 12 months starting at the current month.
 - **Rows:** one per seed, every seed listed. Planted seeds first (soonest harvest), then by soonest sow, then untimed seeds reading "No sow timing" in `ink-3`. Each row has a label-column name and a track with faint month gridlines; the whole row is one click target and fills `surface` on hover.
 - **Marks:** sow window as a 10px rounded `ink-2` bar (green when open today) → 2px `ink-3` grow run → 10px round ink harvest dot with a white halo. A single-week window is a 10px square (2px corners), so it never reads as the round harvest dot. A planted seed plots its real sow date as a green point, then its run to expected harvest. Windows that wrap past the edge are clipped there.
 - **Frost:** the two average frost dates as dashed `ink-3` hairlines through all rows.
-- **Motion:** sow bars and runs scale in from the left (700ms ease-out), harvest dots pop in after; each row staggers 28ms.
+- **Motion:** on load, sow bars and runs grow from the left and harvest dots pop in after, staggered row by row (GSAP, see Motion).
 
 **The No Today Line Rule.** Today is marked by the pill in its own band only. There is no full-height today line through the rows (explicitly removed at Trey's request).
 
 ### Motion (system-wide)
-- One authored moment: the Almanac draw-in above (plus the progress bar growing in on the same curve).
-- View switches and dialog closes cross-fade via the View Transitions API (240ms ease-out), skipped under reduced motion.
-- Micro-interactions: 140ms color changes, 240ms lifts and reveals, ease `cubic-bezier(0.16, 1, 0.3, 1)`; modals rise and un-blur in; small reveals fade up 4px.
-- `prefers-reduced-motion: reduce` neutralizes every animation and transition.
+All motion is **GSAP**, defined in one module: `src/lib/motion.js`. Content is visible by default. Animations only run *from* a hidden state, and none run under `prefers-reduced-motion: reduce`. Default ease is `power3.out`. Entrances ease out and exits ease in.
+- **Home load-in** (one orchestrated timeline, `revealHome`):
+  1. the Now lines rise in with a stagger
+  2. the Almanac axis draws left to right
+  3. year, month and Today labels settle
+  4. rows fade up
+  5. sow bars and runs grow from the left (`expo.out`)
+  6. harvest dots pop (`back.out`)
+  7. frost lines fade in
+  8. the In the ground carousel settles
+- **Other views:** sections stagger up (`revealView`).
+- **Dialogs:** the backdrop fades and the panel lifts in (a bottom sheet on phones). On close, the panel eases out before it unmounts (`dialogIn` / `closeDialog`).
+- **Toasts:** slide in, time themselves out, and slide out before removal.
+- **Reveals:** the harvest-date prompt, second sow time, search results and setup result ease in (`appear`, `appearChildren`). The progress bar fills from zero.
+- **Settings gear:** turns a quarter each time it's toggled.
+- **CSS for simple states:** 140ms color changes, and button press scale.
 
 ### Icons
 Phosphor, regular weight only, inlined from the official SVGs in `src/lib/icons.jsx` (`currentColor`, no dependency). The brand mark is the Phosphor plant in a 32px ink square.

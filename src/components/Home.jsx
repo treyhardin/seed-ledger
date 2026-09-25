@@ -1,9 +1,12 @@
-import { createMemo, Show, For } from "solid-js";
+import { createMemo, Show, For, onMount } from "solid-js";
 import { status, nextFrost, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
 import Almanac from "./Almanac";
 import SeedCard from "./SeedCard";
+import { revealHome } from "../lib/motion";
 
 export default function Home(props) {
+  let root;
+  onMount(() => revealHome(root));
   const list = () => props.seeds;
   const growing = createMemo(() => list().filter((s) => status(s) === "growing"));
   const frost = createMemo(() => nextFrost(props.settings));
@@ -21,7 +24,7 @@ export default function Home(props) {
   );
 
   return (
-    <div class="view view--home">
+    <div class="view view--home" ref={root}>
       {/* "Now": what to do, set as a few lines of type, not a row of widgets. */}
       <section class="now" aria-label="What to do now">
         <Show when={!hasFrostDates(props.settings)}>

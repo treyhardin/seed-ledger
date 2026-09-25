@@ -2,6 +2,7 @@ import { createStore } from "solid-js/store";
 import { createSignal, For, Show } from "solid-js";
 import { SUN, SUN_ORDER, ANCHORS, DIRECTIONS, START_METHOD } from "../lib/garden";
 import { Plus, X } from "../lib/icons";
+import { appear } from "../lib/motion";
 
 // Fields with a fixed default (selects/toggles) vs. free inputs that start blank.
 const DEFAULTS = {
@@ -209,7 +210,7 @@ export default function SeedFields(props) {
               </button>
             }
           >
-            <div class="second-sow">
+            <div class="second-sow" ref={appear()}>
               <div class="second-sow__head">
                 <span class="field__label">Second sow time</span>
                 <button type="button" class="btn btn--icon btn--xs tip" data-tip="Remove second sow time" aria-label="Remove second sow time"
