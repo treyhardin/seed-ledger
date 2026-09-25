@@ -1,19 +1,41 @@
-import { createMemo, Show, For, onMount } from "solid-js";
+import { createMemo, createSignal, createEffect, Show, For, onMount, onCleanup } from "solid-js";
 import { status, nextFrost, sowOutlook, formatMonthDay, hasFrostDates } from "../lib/garden";
 import Almanac from "./Almanac";
 import SeedCard from "./SeedCard";
 import { revealHome } from "../lib/motion";
+import { Plant, CaretLeft, CaretRight } from "../lib/icons";
 
 export default function Home(props) {
   let root;
-  onMount(() => revealHome(root));
+  let track;
+
+  // Carousel arrows: only shown when the cards overflow; disabled at each end.
+  const [edges, setEdges] = createSignal({ prev: false, next: false });
+  const measure = () => {
+    if (!track) return setEdges({ prev: false, next: false });
+    const max = track.scrollWidth - track.clientWidth;
+    setEdges({ prev: track.scrollLeft > 4, next: track.scrollLeft < max - 4 });
+  };
+  const page = (dir) => {
+    const card = track?.querySelector(".card");
+    const step = card ? card.getBoundingClientRect().width + 16 : track.clientWidth * 0.8;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    track.scrollBy({ left: dir * step, behavior: reduce ? "auto" : "smooth" });
+  };
+
+  onMount(() => {
+    revealHome(root);
+    window.addEventListener("resize", measure);
+    onCleanup(() => window.removeEventListener("resize", measure));
+  });
   const list = () => props.seeds;
   const growing = createMemo(() => list().filter((s) => status(s) === "growing"));
+  createEffect(() => { growing().length; requestAnimationFrame(measure); });
   const frost = createMemo(() => nextFrost(props.settings));
   const outlook = createMemo(() => sowOutlook(list(), props.settings));
 
   const carousel = (rows) => (
-    <div class="carousel">
+    <div class="carousel" ref={track} onScroll={measure}>
       <For each={rows}>
         {(seed) => (
           <SeedCard seed={seed} settings={props.settings}
@@ -98,9 +120,20 @@ export default function Home(props) {
         <div class="shelf__head">
           <h2>In the ground</h2>
           <span class="count">{growing().length}</span>
+          <Show when={growing().length && (edges().prev || edges().next)}>
+            <div class="shelf__nav">
+              <button class="btn btn--icon tip" data-tip="Previous" aria-label="Scroll to previous"
+                disabled={!edges().prev} onClick={() => page(-1)}><CaretLeft size={18} /></button>
+              <button class="btn btn--icon tip" data-tip="Next" aria-label="Scroll to next"
+                disabled={!edges().next} onClick={() => page(1)}><CaretRight size={18} /></button>
+            </div>
+          </Show>
         </div>
         <Show when={growing().length} fallback={
-          <p class="shelf__empty">Nothing planted yet. Mark a seed as planted to start tracking its progress.</p>
+          <p class="shelf__empty">
+            <span class="shelf__empty-icon"><Plant size={20} /></span>
+            Nothing planted yet. Mark a seed as planted to start tracking its progress.
+          </p>
         }>
           {carousel(growing())}
         </Show>

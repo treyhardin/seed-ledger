@@ -1,5 +1,5 @@
 import { createSignal, Show, For, onMount } from "solid-js";
-import { Snowflake, MapPin, Trash, DownloadSimple, UploadSimple } from "../lib/icons";
+import { Snowflake, MapPin, Trash, DownloadSimple, UploadSimple, CircleHalf, Sun, Moon } from "../lib/icons";
 import FrostDateInput from "./FrostDateInput";
 import ConfirmModal from "./ConfirmModal";
 import ImportButton from "./ImportButton";
@@ -9,6 +9,7 @@ import { COLOR_MODES, getColorMode, setColorMode } from "../lib/theme";
 export default function Settings(props) {
   const s = () => props.settings || {};
   const [confirming, setConfirming] = createSignal(false);
+  const MODE_ICON = { auto: CircleHalf, light: Sun, dark: Moon };
   const [mode, setMode] = createSignal(getColorMode());
   const chooseMode = (m) => { setMode(m); setColorMode(m); };
   let root;
@@ -61,7 +62,7 @@ export default function Settings(props) {
               <button type="button" class="toggle-opt" role="radio"
                 classList={{ "toggle-opt--on": mode() === value }}
                 aria-checked={mode() === value} onClick={() => chooseMode(value)}>
-                {label}
+                {MODE_ICON[value]({ size: 16 })} {label}
               </button>
             )}
           </For>

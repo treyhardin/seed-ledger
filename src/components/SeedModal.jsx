@@ -3,7 +3,10 @@ import SeedFields from "./SeedFields";
 import {
   status, START_METHOD, rangeLabel, formatDate,
 } from "../lib/garden";
-import { X, Shovel, Basket, Trash } from "../lib/icons";
+import {
+  X, Shovel, Basket, Trash, House, PencilSimple, ArrowLineDown, ArrowsOutLineHorizontal,
+  CirclesThree, CalendarDots, Timer, ThermometerSimple,
+} from "../lib/icons";
 import SunTag from "./SunTag";
 import SowWindows from "./SowWindows";
 import { dialogIn } from "../lib/motion";
@@ -16,8 +19,11 @@ function Detail(props) {
   const seed = () => props.seed;
   const st = () => status(seed());
 
-  const Cell = (label, value) => (
-    <div class="detail__cell"><span class="detail__label">{label}</span><span class="detail__val">{value ?? "—"}</span></div>
+  const Cell = (Icon, label, value) => (
+    <div class="detail__cell">
+      <span class="detail__label"><Icon size={14} /> {label}</span>
+      <span class="detail__val">{value ?? "—"}</span>
+    </div>
   );
 
   return (
@@ -25,7 +31,10 @@ function Detail(props) {
       <div class="detail__top">
         <span class={`pill pill--${st()}`}>{STATUS_LABEL[st()]}</span>
         <Show when={seed().start_method}>
-          <span class="method-tag">{START_METHOD[seed().start_method]}</span>
+          <span class="method-tag">
+            {seed().start_method === "indoors" ? <House size={14} /> : <Shovel size={14} />}
+            {START_METHOD[seed().start_method]}
+          </span>
         </Show>
         <span class="card__sun"><SunTag sun={seed().sun} size={15} label /></span>
       </div>
@@ -38,12 +47,12 @@ function Detail(props) {
       </Show>
 
       <div class="detail__grid">
-        {Cell("Planting depth", seed().depth_in != null ? `${seed().depth_in}"` : null)}
-        {Cell("Spacing", seed().spacing_in != null ? `${seed().spacing_in}"` : null)}
-        {Cell("Seeds per hole", seed().seeds_per_hole)}
-        {Cell("Days to maturity", seed().days_to_maturity ? `${seed().days_to_maturity} days` : null)}
-        {Cell("Days to germinate", rangeLabel(seed().days_to_germ, seed().days_to_germ_max, " days"))}
-        {Cell("Soil temperature", rangeLabel(seed().soil_temp_min, seed().soil_temp_max, "°F"))}
+        {Cell(ArrowLineDown, "Planting depth", seed().depth_in != null ? `${seed().depth_in}"` : null)}
+        {Cell(ArrowsOutLineHorizontal, "Spacing", seed().spacing_in != null ? `${seed().spacing_in}"` : null)}
+        {Cell(CirclesThree, "Seeds per hole", seed().seeds_per_hole)}
+        {Cell(CalendarDots, "Days to maturity", seed().days_to_maturity ? `${seed().days_to_maturity} days` : null)}
+        {Cell(Timer, "Days to germinate", rangeLabel(seed().days_to_germ, seed().days_to_germ_max, " days"))}
+        {Cell(ThermometerSimple, "Soil temperature", rangeLabel(seed().soil_temp_min, seed().soil_temp_max, "°F"))}
       </div>
 
       <SowWindows seed={seed()} settings={props.settings} />
@@ -137,7 +146,7 @@ export default function SeedModal(props) {
               <Show when={st() === "growing"}>
                 <HarvestButton min={seed().planted_date} onConfirm={(d) => props.onMarkHarvested(seed(), d)} />
               </Show>
-              <button class="btn" onClick={() => setMode("edit")}>Edit</button>
+              <button class="btn" onClick={() => setMode("edit")}><PencilSimple size={16} /> Edit</button>
             </div>
           </footer>
         </Show>

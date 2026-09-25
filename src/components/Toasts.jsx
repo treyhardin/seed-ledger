@@ -1,5 +1,5 @@
 import { For, Show, onMount, onCleanup } from "solid-js";
-import { X } from "../lib/icons";
+import { X, ArrowCounterClockwise } from "../lib/icons";
 import { toastIn, toastOut } from "../lib/motion";
 
 const LIFETIME = 6000;
@@ -24,7 +24,7 @@ function Toast(props) {
     <div class="toast" ref={el}>
       <span class="toast__msg">{props.toast.message}</span>
       <Show when={props.toast.undo}>
-        <button class="toast__undo" onClick={() => { props.toast.undo(); close(); }}>Undo</button>
+        <button class="toast__undo" onClick={() => { props.toast.undo(); close(); }}><ArrowCounterClockwise size={14} /> Undo</button>
       </Show>
       <button class="toast__x" aria-label="Dismiss" onClick={close}>
         <X size={14} />
