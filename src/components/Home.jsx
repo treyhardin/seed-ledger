@@ -31,6 +31,16 @@ export default function Home(props) {
   const list = () => props.seeds;
   const growing = createMemo(() => list().filter((s) => status(s) === "growing"));
   createEffect(() => { growing().length; requestAnimationFrame(measure); });
+  // A seed name inside the "now" sentences. Inline text (not a <button>) so long
+  // names wrap mid-name and a trailing comma never starts a line; behaves as a
+  // button for keyboard and assistive tech.
+  const SeedLink = (p) => (
+    <span class="now__seed" role="button" tabindex="0"
+      onClick={() => props.onOpen(p.seed)}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); props.onOpen(p.seed); } }}>
+      {p.seed.name}
+    </span>
+  );
   const frost = createMemo(() => nextFrost(props.settings));
   const outlook = createMemo(() => sowOutlook(list(), props.settings));
 
@@ -66,9 +76,7 @@ export default function Home(props) {
               <For each={outlook().ready}>
                 {(r, i) => (
                   <>
-                    <Show when={i() > 0}><span class="now__sep">, </span></Show>
-                    <button class="now__seed" onClick={() => props.onOpen(r.seed)}>{r.seed.name}</button>
-                    <span class="now__meta"> until {formatMonthDay(r.win.endDate)}</span>
+                    <SeedLink seed={r.seed} /><Show when={i() < outlook().ready.length - 1}><span class="now__sep">,</span></Show>{" "}
                   </>
                 )}
               </For>
@@ -84,11 +92,10 @@ export default function Home(props) {
                 <For each={next().seeds}>
                   {(seed, i) => (
                     <>
-                      <Show when={i() > 0}><span class="now__sep">, </span></Show>
-                      <button class="now__seed" onClick={() => props.onOpen(seed)}>{seed.name}</button>
+                      <SeedLink seed={seed} /><Show when={i() < next().seeds.length - 1}><span class="now__sep">,</span></Show>{" "}
                     </>
                   )}
-                </For>{" "}
+                </For>
                 <span class="now__meta">
                   {next().weeks >= 1 ? `in ${next().weeks} ${next().weeks === 1 ? "week" : "weeks"}` : next().days <= 1 ? "tomorrow" : "this week"}
                 </span>

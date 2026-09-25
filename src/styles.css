@@ -257,8 +257,8 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: var(--tracking-display);
 }
 .now__seed {
-  padding: 0; border: none; background: none; color: inherit;
-  font: inherit; font-weight: 700; letter-spacing: inherit;
+  font-weight: 700; cursor: pointer;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
   text-decoration: underline; text-decoration-thickness: 2px;
   text-underline-offset: 0.14em; text-decoration-color: var(--color-line-strong);
   transition: text-decoration-color var(--dur-fast) ease, color var(--dur-fast) ease;
