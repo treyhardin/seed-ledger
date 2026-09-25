@@ -48,7 +48,7 @@ export default function Home(props) {
   const shownReady = () => outlook().ready.slice(0, READY_CAP);
   const nextUp = () => outlook().upcoming.slice(0, NEXT_COUNT);
   const whenLabel = (u) =>
-    u.weeks >= 1 ? `in ${u.weeks} ${u.weeks === 1 ? "week" : "weeks"}` : u.days <= 1 ? "tomorrow" : "this week";
+    u.weeks >= 1 ? `${u.weeks} ${u.weeks === 1 ? "wk" : "wks"}` : u.days <= 1 ? "Tomorrow" : "This week";
   const outlook = createMemo(() => sowOutlook(list(), props.settings));
 
   const carousel = (rows) => (
@@ -76,40 +76,39 @@ export default function Home(props) {
           </div>
         </Show>
 
+        {/* Sow now: one seed per line (long names truncate); "+N more" sits
+            under the label so the names column stays clean */}
         <Show when={outlook().ready.length}>
           <div class="now__row now__row--live">
-            <span class="now__key">Sow now</span>
-            <div class="now__line">
-              <For each={shownReady()}>
-                {(r, i) => (
-                  <>
-                    <SeedLink seed={r.seed} /><Show when={i() < shownReady().length - 1}><span class="now__sep">,</span></Show>{" "}
-                  </>
-                )}
-              </For>
+            <div class="now__keycol">
+              <span class="now__key">Sow now</span>
               <Show when={outlook().ready.length > READY_CAP}>
                 <MoreSeeds count={outlook().ready.length - READY_CAP} title="Ready to sow"
                   seeds={outlook().ready.map((r) => r.seed)} onOpen={props.onOpen} />
               </Show>
             </div>
+            <ul class="now__list">
+              <For each={shownReady()}>
+                {(r) => <li class="now__item"><SeedLink seed={r.seed} /></li>}
+              </For>
+            </ul>
           </div>
         </Show>
 
-        {/* Next: the next few seeds whose sow windows are coming up */}
+        {/* Next: a compact list of the next few seeds, weeks right-aligned */}
         <Show when={nextUp().length}>
-          <div class="now__row">
+          <div class="now__row now__row--next">
             <span class="now__key">Next</span>
-            <div class="now__line">
+            <ul class="now__list now__list--next">
               <For each={nextUp()}>
-                {(u, i) => (
-                  <>
-                    <SeedLink seed={u.seed} />{" "}
-                    <span class="now__meta">{whenLabel(u)}</span>
-                    <Show when={i() < nextUp().length - 1}><span class="now__sep">,</span></Show>{" "}
-                  </>
+                {(u) => (
+                  <li class="now__next">
+                    <SeedLink seed={u.seed} />
+                    <span class="now__when">{whenLabel(u)}</span>
+                  </li>
                 )}
               </For>
-            </div>
+            </ul>
           </div>
         </Show>
 
